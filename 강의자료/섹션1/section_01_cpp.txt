@@ -1,0 +1,636 @@
+//////////////////////////////////////////////////////////////////
+✅ 1. 세 수 중 최솟값
+#include <iostream>
+    using namespace std;
+
+int solution(int a, int b, int c)
+{
+    int answer = (a < b) ? a : b;
+    if (c < answer)
+        answer = c;
+    return answer;
+}
+
+int main()
+{
+    cout << solution(2, 5, 1) << endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 2. 삼각형 판별하기
+// 나의 풀이
+#include <iostream>
+    using namespace std;
+
+string solution(int a, int b, int c)
+{
+    // 밑면 > 나머지 두개
+    // 밑면은 젤 큰값
+    // 나머지는 두개 = 전체합 - 밑면
+    int max_val = max(a, max(b, c));
+    int total = a + b + c;
+    return (total - max_val > max_val) ? "YES" : "NO";
+}
+
+int main()
+{
+    cout << solution(13, 33, 17) << endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 3. 연필개수
+#include <iostream>
+    using namespace std;
+
+int solution(int n)
+{
+    return (n + 11) / 12;
+}
+
+int main()
+{
+    cout << solution(178) << endl;
+    return 0;
+}
+
+// 나의 풀이
+#include <iostream>
+
+int solution(int a)
+{
+    // 1명 이더라도 1다스가 필요하다
+    // 1명일 경우에는 1명 +11 해줘야 1다스가 나옴.
+    int result = 0;
+    result = (a + 11) / 12;
+    return result;
+}
+
+int main()
+{
+    auto result = solution(12);
+    std::cout << result << "\n";
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 4. 1부터 N까지의 합
+#include <iostream>
+    using namespace std;
+
+int solution(int n)
+{
+    int answer = 0;
+    for (int i = 1; i <= n; ++i)
+    {
+        answer += i;
+    }
+    return answer;
+}
+
+int main()
+{
+    cout << solution(10) << endl;
+    return 0;
+}
+
+// 나의 풀이
+#include <iostream>
+
+int solution(int a)
+{
+    // 맨처음 과 , 맨끝 더해
+    // 더한거 * 나눈값
+
+    int result = 0;
+    int first_end_sum = 1 + a;
+    int divied = a / 2;
+    int rest = a % 2;
+
+    result = first_end_sum * divied;
+
+    if (rest > 0)
+        result += rest + divied;
+
+    return result;
+
+    // 등차수열 공식을 하면 더 간편하게 구해짐.
+    // return (1 + a) * a / 2;
+}
+
+int main()
+{
+    auto result = solution(4);
+    std::cout << result << "\n";
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 5. 최솟값 구하기
+#include <iostream>
+#include <vector>
+#include <climits>
+    using namespace std;
+
+int solution(const vector<int> &arr)
+{
+    int min_val = INT_MAX;
+    for (int x : arr)
+    {
+        if (x < min_val)
+            min_val = x;
+    }
+    return min_val;
+}
+
+int main()
+{
+    vector<int> arr =
+        {5, 7, 1, 3, 2, 9, 11};
+    cout << solution(arr) << endl;
+    return 0;
+}
+
+// 나의 풀이
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <climits>
+
+int solution(const std::vector<int> &arr)
+{
+    int minVal = INT_MAX; // #include <climits>
+    for (int a : arr)
+    {
+        minVal = std::min(minVal, a); // #include <algorithm>
+    }
+
+    return minVal;
+}
+
+int main()
+{
+    std::vector<int> arr =
+        {5, 7, 1, 3, 2, 9, 11};
+    std::cout << solution(arr) << std::endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 6. 홀수
+#include <iostream>
+#include <vector>
+#include <climits>
+    using namespace std;
+
+pair<int, int> solution(const vector<int> &arr)
+{
+    int sum = 0, min_val = INT_MAX;
+    for (int x : arr)
+    {
+        if (x % 2 == 1)
+        {
+            sum += x;
+            if (x < min_val)
+                min_val = x;
+        }
+    }
+    return {sum, min_val};
+}
+
+int main()
+{
+    vector<int> arr =
+        {12, 77, 38, 41, 53, 92, 85};
+    auto result = solution(arr);
+    cout << result.first << endl
+         << result.second << endl;
+    return 0;
+}
+
+// 나의 풀이
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <climits>
+#include <algorithm>
+
+/*
+✅ 현재 사용한 기능별 헤더 분석
+기능 사용	필요한 헤더	포함 여부
+std::cout, std::endl		<iostream>	✅ 있음
+std::vector					<vector>	✅ 있음
+std::pair, std::make_pair	<utility>	❌ 없음 → 추가 필요
+INT_MAX						<climits>	❌ 없음 → 추가 필요
+std::min()					<algorithm>	❌ 없음 → 추가 필요
+*/
+std::pair<int, int> solution(const std::vector<int> &arr)
+{
+    std::pair<int, int> result = std::make_pair(0, 0);
+    int oddVal = INT_MAX;
+
+    for (int a : arr)
+    {
+        if (a % 2 == 1)
+        {
+            result.first += a;
+            oddVal = std::min(oddVal, a);
+        }
+    }
+
+    result.second = oddVal;
+    return result;
+}
+
+int main()
+{
+    std::vector<int> arr =
+        {12, 77, 38, 41, 53, 92, 85};
+    auto result = solution(arr);
+    std::cout << result.first << std::endl
+              << result.second << std::endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 7. 10부제
+#include <iostream>
+#include <vector>
+    using namespace std;
+
+int solution(int day, const vector<int> &arr)
+{
+    int count = 0;
+    for (int x : arr)
+    {
+        if (x % 10 == day)
+            ++count;
+    }
+    return count;
+}
+
+int main()
+{
+    vector<int> arr =
+        {25, 23, 11, 47, 53, 17, 33};
+    cout << solution(3, arr) << endl;
+    return 0;
+}
+
+// 나의 풀이
+#include <iostream>
+#include <vector>
+
+int solution(int day, const std::vector<int> &arr)
+{
+    // 차번호 일의자리 숫자와 , 날짜의 일의자리 숫자가 일치하면
+    // -> 운행 금지
+    // 10부제 위반하는 차량의 대수
+    int day_van_num = day % 10;
+    int count = 0;
+
+    for (int a : arr)
+    {
+        if (day_van_num != a % 10)
+            count++;
+    }
+
+    return count;
+}
+
+int main()
+{
+    std::vector<int> arr =
+        {12, 20, 54, 30, 87, 91, 30};
+    std::cout << solution(0, arr) << std::endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 8. 일곱난쟁이
+// 조합 + 합검사
+#include <iostream>
+#include <vector>
+#include <numeric>
+    using namespace std;
+
+vector<int> solution(vector<int> arr)
+{
+    int sum = accumulate(arr.begin(), arr.end(), 0);
+    for (int i = 0; i < arr.size(); ++i)
+    {
+        for (int j = i + 1; j < arr.size(); ++j)
+        {
+            if (sum - arr[i] - arr[j] == 100)
+            {
+                // 이거 에러!!
+                // 큰 인덱스인가? -> 먼저지워야 함.
+                arr.erase(arr.begin() + j);
+                arr.erase(arr.begin() + i);
+                return arr;
+            }
+        }
+    }
+    return arr;
+}
+
+int main()
+{
+    vector<int> arr =
+        {20, 7, 23, 19, 10, 15, 25, 8, 13};
+    vector<int> result = solution(arr);
+    for (int x : result)
+        cout << x << " ";
+    cout << endl;
+    return 0;
+}
+
+// 나의 풀이
+#include <iostream>
+#include <vector>
+#include <numeric>
+
+std::vector<int> solution(std::vector<int> arr)
+{
+    // 난장이들의 키의 합이 -> 100
+    // 결과적으로 두개 뺴야해
+    // 나머진 합이 100 된대
+    // 두개 씩 빼보고 100이 되면 그게 맞는거
+    int sum = std::accumulate(arr.begin(), arr.end(), 0);
+    int remove_sum = sum - 100;
+
+    for (int i = 0; i < arr.size(); i++)
+    {
+        for (int j = 0; j < arr.size(); j++)
+        {
+            if (i == j)
+                continue;
+
+            if (arr[i] + arr[j] == remove_sum)
+            {
+                // arr.erase(arr.begin() + i);
+                // arr.erase(arr.begin() + j);
+
+                // 큰 인덱스 먼저 지워야 함.
+                if (i > j)
+                {
+                    arr.erase(arr.begin() + i);
+                    arr.erase(arr.begin() + j);
+                }
+                else
+                {
+                    arr.erase(arr.begin() + j);
+                    arr.erase(arr.begin() + i);
+                }
+
+                int check = std::accumulate(arr.begin(), arr.end(), 0);
+                return arr;
+            }
+        }
+    }
+
+    return arr;
+}
+
+int main()
+{
+    std::vector<int> arr =
+        {20, 7, 23, 19, 10, 15, 25, 8, 13};
+    std::vector<int> result = solution(arr);
+    for (int x : result)
+        std::cout << x << " ";
+    std::cout << std::endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 9. A를 #으로
+#include <iostream>
+#include <string>
+    using namespace std;
+
+string solution(string s)
+{
+    for (char &c : s)
+    {
+        if (c == 'A')
+            c = '#';
+    }
+    return s;
+}
+
+int main()
+{
+    string str = "BANANA";
+    cout << solution(str) << endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 10. 문자 찾기
+#include <iostream>
+#include <string>
+    using namespace std;
+
+int solution(const string &s, char t)
+{
+    int count = 0;
+    for (char c : s)
+    {
+        if (c == t)
+            ++count;
+    }
+    return count;
+}
+
+int main()
+{
+    string str = "COMPUTERPROGRAMMING";
+    cout << solution(str, 'R') << endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 11. 대문자 찾기
+#include <iostream>
+#include <string>
+    using namespace std;
+
+int solution(const string &s)
+{
+    int count = 0;
+    for (char c : s)
+    {
+        if (isupper(c))
+            ++count;
+    }
+    return count;
+}
+
+int main()
+{
+    string str = "KoreaTimeGood";
+    cout << solution(str) << endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 12. 대문자로 통일
+#include <iostream>
+#include <string>
+    using namespace std;
+
+string solution(const string &s)
+{
+    string answer;
+    for (char c : s)
+    {
+        if (islower(c))
+            answer += toupper(c);
+        else
+            answer += c;
+    }
+    return answer;
+}
+
+int main()
+{
+    string str = "ItisTimeToStudy";
+    cout << solution(str) << endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 13. 대소문자 변환
+#include <iostream>
+#include <string>
+    using namespace std;
+
+string solution(const string &s)
+{
+    string answer;
+    for (char c : s)
+    {
+        if (isupper(c))
+            answer += tolower(c);
+        else
+            answer += toupper(c);
+    }
+    return answer;
+}
+
+int main()
+{
+    cout << solution("StuDY") << endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 14. 가장 긴 문자열
+#include <iostream>
+#include <vector>
+#include <string>
+    using namespace std;
+
+string solution(const vector<string> &s)
+{
+    string answer;
+    size_t max_len = 0;
+    for (const string &str : s)
+    {
+        if (str.length() > max_len)
+        {
+            max_len = str.length();
+            answer = str;
+        }
+    }
+    return answer;
+}
+
+int main()
+{
+    vector<string> str =
+        {"teacher", "time", "student", "beautiful", "good"};
+    cout << solution(str) << endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 15. 가운데 문자 출력
+#include <iostream>
+#include <string>
+    using namespace std;
+
+string solution(const string &s)
+{
+    int mid = s.length() / 2;
+    if (s.length() % 2 == 1)
+        return s.substr(mid, 1);
+    else
+        return s.substr(mid - 1, 2);
+}
+
+int main()
+{
+    cout << solution("study") << endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 16. 중복문자제거
+#include <iostream>
+#include <string>
+    using namespace std;
+
+string solution(const string &s)
+{
+    string answer;
+    for (size_t i = 0; i < s.length(); ++i)
+    {
+        if (s.find(s[i]) == i)
+        {
+            answer += s[i];
+        }
+    }
+    return answer;
+}
+
+int main()
+{
+    cout << solution("ksekkset") << endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////
+✅ 17. 중복단어제거
+#include <iostream>
+#include <vector>
+#include <string>
+    using namespace std;
+
+vector<string> solution(const vector<string> &s)
+{
+    vector<string> answer;
+    for (size_t i = 0; i < s.size(); ++i)
+    {
+        if (find(s.begin(), s.begin() + i, s[i]) == s.begin() + i)
+        {
+            answer.push_back(s[i]);
+        }
+    }
+    return answer;
+}
+
+int main()
+{
+    vector<string> str =
+        {"good", "time", "good", "time", "student"};
+    vector<string> result = solution(str);
+    for (const string &word : result)
+    {
+        cout << word << " ";
+    }
+    cout << endl;
+    return 0;
+}
