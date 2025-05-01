@@ -1,9 +1,9 @@
 //////////////////////////////////////////////////////////////////
 ✅ 1. 세 수 중 최솟값
 #include <iostream>
-    using namespace std;
 
-int solution(int a, int b, int c)
+    int
+    solution(int a, int b, int c)
 {
     int answer = (a < b) ? a : b;
     if (c < answer)
@@ -21,9 +21,9 @@ int main()
 ✅ 2. 삼각형 판별하기
 // 나의 풀이
 #include <iostream>
-    using namespace std;
 
-string solution(int a, int b, int c)
+    string
+    solution(int a, int b, int c)
 {
     // 밑면 > 나머지 두개
     // 밑면은 젤 큰값
@@ -42,9 +42,9 @@ int main()
 //////////////////////////////////////////////////////////////////
 ✅ 3. 연필개수
 #include <iostream>
-    using namespace std;
 
-int solution(int n)
+    int
+    solution(int n)
 {
     return (n + 11) / 12;
 }
@@ -77,9 +77,9 @@ int main()
 //////////////////////////////////////////////////////////////////
 ✅ 4. 1부터 N까지의 합
 #include <iostream>
-    using namespace std;
 
-int solution(int n)
+    int
+    solution(int n)
 {
     int answer = 0;
     for (int i = 1; i <= n; ++i)
@@ -131,9 +131,9 @@ int main()
 #include <iostream>
 #include <vector>
 #include <climits>
-    using namespace std;
 
-int solution(const vector<int> &arr)
+    int
+    solution(const vector<int> &arr)
 {
     int min_val = INT_MAX;
     for (int x : arr)
@@ -182,9 +182,9 @@ int main()
 #include <iostream>
 #include <vector>
 #include <climits>
-    using namespace std;
 
-pair<int, int> solution(const vector<int> &arr)
+    pair<int, int>
+    solution(const vector<int> &arr)
 {
     int sum = 0, min_val = INT_MAX;
     for (int x : arr)
@@ -257,9 +257,9 @@ int main()
 ✅ 7. 10부제
 #include <iostream>
 #include <vector>
-    using namespace std;
 
-int solution(int day, const vector<int> &arr)
+    int
+    solution(int day, const vector<int> &arr)
 {
     int count = 0;
     for (int x : arr)
@@ -313,9 +313,9 @@ int main()
 #include <iostream>
 #include <vector>
 #include <numeric>
-    using namespace std;
 
-vector<int> solution(vector<int> arr)
+    vector<int>
+    solution(vector<int> arr)
 {
     int sum = accumulate(arr.begin(), arr.end(), 0);
     for (int i = 0; i < arr.size(); ++i)
@@ -408,9 +408,9 @@ int main()
 ✅ 9. A를 #으로
 #include <iostream>
 #include <string>
-    using namespace std;
 
-string solution(string s)
+    string
+    solution(string s)
 {
     for (char &c : s)
     {
@@ -427,13 +427,49 @@ int main()
     return 0;
 }
 
+// 나의 풀이
+#include <iostream>
+#include <string>
+
+/*
+* 이거 좀 신기하네
+int main() {
+    std::string s = "ABC\0DEF";  // 총 7글자 ('\0' 포함)
+    std::cout << "size: " << s.size() << "\n";      // 출력: 7
+    std::cout << "length: " << s.length() << "\n";  // 출력: 7
+    std::cout << "c_str(): " << s.c_str() << "\n";  // 출력: ABC
+}
+*/
+
+std::string solution(std::string s)
+{
+    // .size() .length() 차이 없고
+    // '\n' 포함 하지 않음.
+    int len = s.length();
+
+    for (int i = 0; i < len; i++)
+    {
+        if ('A' == s[i])
+            s[i] = '#';
+    }
+
+    return s;
+}
+
+int main()
+{
+    std::string str = "BANANA";
+    std::cout << solution(str) << std::endl;
+    return 0;
+}
+
 //////////////////////////////////////////////////////////////////
 ✅ 10. 문자 찾기
 #include <iostream>
 #include <string>
-    using namespace std;
 
-int solution(const string &s, char t)
+    int
+    solution(const string &s, char t)
 {
     int count = 0;
     for (char c : s)
@@ -451,13 +487,39 @@ int main()
     return 0;
 }
 
+// 나의 풀이
+#include <iostream>
+#include <string>
+
+int solution(const std::string &s, char t)
+{
+    int result = 0;
+    for (int i = 0; i < s.size(); i++)
+    {
+        if (s[i] == t)
+        {
+            result++;
+        }
+    }
+
+    return result;
+}
+
+int main()
+{
+    std::string str = "COMPUTERPROGRAMMING";
+    std::cout << solution(str, 'R') << std::endl;
+    return 0;
+}
+
 //////////////////////////////////////////////////////////////////
 ✅ 11. 대문자 찾기
 #include <iostream>
 #include <string>
-    using namespace std;
+#include <cctype>
 
-int solution(const string &s)
+    int
+    solution(const string &s)
 {
     int count = 0;
     for (char c : s)
@@ -479,9 +541,9 @@ int main()
 ✅ 12. 대문자로 통일
 #include <iostream>
 #include <string>
-    using namespace std;
 
-string solution(const string &s)
+    string
+    solution(const string &s)
 {
     string answer;
     for (char c : s)
@@ -501,13 +563,47 @@ int main()
     return 0;
 }
 
+// 나의 풀이
+#include <iostream>
+#include <string>
+#include <cctype>
+
+std::string solution(const std::string &s)
+{
+    // 빈거니까 인덱스로 접근하면 안됨.
+    std::string result;
+
+    for (int i = 0; i < s.size(); i++)
+    {
+        if (islower(s[i]))
+        {
+            // 빈거니까 인덱스로 접근하면 안됨.
+            result += toupper(s[i]);
+        }
+        else
+        {
+            // 빈거니까 인덱스로 접근하면 안됨.
+            result += s[i];
+        }
+    }
+
+    return result;
+}
+
+int main()
+{
+    std::string str = "ItisTimeToStudy";
+    std::cout << solution(str) << std::endl;
+    return 0;
+}
+
 //////////////////////////////////////////////////////////////////
 ✅ 13. 대소문자 변환
 #include <iostream>
 #include <string>
-    using namespace std;
 
-string solution(const string &s)
+    string
+    solution(const string &s)
 {
     string answer;
     for (char c : s)
@@ -531,9 +627,9 @@ int main()
 #include <iostream>
 #include <vector>
 #include <string>
-    using namespace std;
 
-string solution(const vector<string> &s)
+    string
+    solution(const vector<string> &s)
 {
     string answer;
     size_t max_len = 0;
@@ -556,13 +652,43 @@ int main()
     return 0;
 }
 
+// 나의 풀이
+#include <iostream>
+#include <vector>
+#include <string>
+
+std::string solution(const std::vector<std::string> &s)
+{
+    int maxIndex = 0;
+    int maxSize = 0;
+
+    for (int i = 0; i < s.size(); i++)
+    {
+        if (s[i].size() > maxSize)
+        {
+            maxSize = s[i].size();
+            maxIndex = i;
+        }
+    }
+
+    return s[maxIndex];
+}
+
+int main()
+{
+    std::vector<std::string> str =
+        {"teacher", "time", "student", "beautiful", "good"};
+    std::cout << solution(str) << std::endl;
+    return 0;
+}
+
 //////////////////////////////////////////////////////////////////
 ✅ 15. 가운데 문자 출력
 #include <iostream>
 #include <string>
-    using namespace std;
 
-string solution(const string &s)
+    string
+    solution(const string &s)
 {
     int mid = s.length() / 2;
     if (s.length() % 2 == 1)
@@ -577,13 +703,44 @@ int main()
     return 0;
 }
 
+// 나의 풀이
+#include <iostream>
+#include <string>
+
+std::string solution(const std::string &s)
+{
+    // 홀수면 가운데 문자
+    // 짝수면 가운데 2개 6-> 3 4
+    std::string center;
+
+    int centerIndex = s.size() / 2;
+
+    if (s.size() % 2 == 0)
+    {
+        center += s[centerIndex - 1];
+        center += s[centerIndex];
+    }
+    else
+    {
+        center += s[centerIndex];
+    }
+
+    return center;
+}
+
+int main()
+{
+    std::cout << solution("study") << std::endl;
+    return 0;
+}
+
 //////////////////////////////////////////////////////////////////
 ✅ 16. 중복문자제거
 #include <iostream>
 #include <string>
-    using namespace std;
 
-string solution(const string &s)
+    string
+    solution(const string &s)
 {
     string answer;
     for (size_t i = 0; i < s.length(); ++i)
@@ -602,19 +759,74 @@ int main()
     return 0;
 }
 
+// 나의 풀이
+#include <iostream>
+#include <string>
+
+/*
+size_t find(const std::string& target, size_t pos = 0) const;
+size_t find(char ch, size_t pos = 0) const;
+
+std::string s = "banana";
+size_t pos = s.find('a'); // 첫 번째 'a'는 인덱스 1에 있음
+
+std::string s = "hello world";
+size_t pos = s.find("world"); // "world"는 인덱스 6부터 시작
+
+std::string s = "banana";
+size_t pos = s.find('a', 2); // 인덱스 2부터 'a'를 찾음
+
+문자 또는 문자열이 어디에 있는지 인덱스로 반환
+못 찾으면 std::string::npos 반환
+std::string::npos == -1
+*/
+
+/*
+std::set<int> s;
+s.insert(5);
+s.insert(2);
+s.insert(8);
+
+저장 순서와 관계없이 내부에서는 자동 정렬됨
+위 코드 실행 후 s는: 2, 5, 8 ← 정렬된 상태로 저장됨
+*/
+std::string solution(const std::string &s)
+{
+    std::string result;
+
+    for (int i = 0; i < s.size(); i++)
+    {
+        // 인덱스 지정을 안해서 처음부터 찾음.. -> 계속.
+        if (s.find(s[i]) == i)
+        {
+            result += s[i];
+        }
+    }
+
+    return result;
+}
+
+int main()
+{
+    std::cout << solution("ksekkset") << std::endl;
+    return 0;
+}
+
 //////////////////////////////////////////////////////////////////
 ✅ 17. 중복단어제거
 #include <iostream>
 #include <vector>
 #include <string>
-    using namespace std;
+#include <algorithm> // for std::find
 
-vector<string> solution(const vector<string> &s)
+    std::vector<std::string>
+    solution(
+        const std::vector<std::string> &s)
 {
-    vector<string> answer;
-    for (size_t i = 0; i < s.size(); ++i)
+    std::vector<std::string> answer;
+    for (std::size_t i = 0; i < s.size(); ++i)
     {
-        if (find(s.begin(), s.begin() + i, s[i]) == s.begin() + i)
+        if (std::find(s.begin(), s.begin() + i, s[i]) == s.begin() + i)
         {
             answer.push_back(s[i]);
         }
@@ -624,13 +836,97 @@ vector<string> solution(const vector<string> &s)
 
 int main()
 {
-    vector<string> str =
+    std::vector<std::string> str =
         {"good", "time", "good", "time", "student"};
-    vector<string> result = solution(str);
-    for (const string &word : result)
+
+    std::vector<std::string> result = solution(str);
+
+    for (const std::string &word : result)
     {
-        cout << word << " ";
+        std::cout << word << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
+
     return 0;
 }
+
+// 나의 풀이
+#include <iostream>
+#include <vector>
+#include <string>
+
+/*
+std::find(begin, end, value);
+begin, end: 탐색 범위 (iterator)
+value: 찾고 싶은 값
+리턴값: 찾으면 해당 위치의 iterator, 못 찾으면 end 반환
+
+std::find(s.begin(), s.begin() + i, s[i]);
+
+std::find(s.begin(), s.begin() + 0, s[0]); // i == 0일 때는:
+std::find(s.begin(), s.begin(), s[0]);
+
+🔍 무슨 일이 일어나나?
+범위가 s.begin()에서 s.begin()까지입니다.
+즉, begin == end가 되어 탐색 범위가 아예 없음
+따라서 std::find는 아무것도 검사하지 않고 바로 end 반환
+*/
+
+std::vector<std::string> solution(const std::vector<std::string> &s)
+{
+    std::vector<std::string> answer;
+
+    for (std::size_t i = 0; i < s.size(); ++i)
+    {
+        // i 가 0 일때 begin이랑 end가 같기때문에, 탐색 범위가 없다.
+        // 그래서 std::find()가 아무것도 검사하지 않고 바로 end 반환
+        if (std::find(s.begin(), s.begin() + i, s[i]) == s.begin() + i)
+        {
+            answer.push_back(s[i]);
+        }
+    }
+
+    return answer;
+}
+
+int main()
+{
+    std::vector<std::string> str =
+        {"good", "time", "good", "time", "student"};
+
+    std::vector<std::string> result = solution(str);
+
+    for (const std::string &word : result)
+    {
+        std::cout << word << " ";
+    }
+
+    std::cout << std::endl;
+    return 0;
+}
+
+/* gpt
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_set>
+
+std::vector<std::string> solution(const std::vector<std::string>& s)
+{
+    std::unordered_set<std::string> seen;
+    std::vector<std::string> result;
+
+    for (const std::string& word : s)
+    {
+        // set 에 달아 놓은것을 보고있다.
+        if (seen.find(word) == seen.end())
+        {
+            seen.insert(word);       // 중복 체크용
+            result.push_back(word);  // 순서 유지
+        }
+    }
+
+    return result;
+}
+
+*/
