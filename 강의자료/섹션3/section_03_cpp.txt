@@ -1,150 +1,166 @@
 //////////////////////////////////////////////////////////////////
-✅ 1. 회문 문자열 (1. 회문문자열.txt)
+✅ 1. 회문 문자열
 #include <iostream>
 #include <string>
 #include <cctype>
 
-int main() {
-    std::string s = "goooG";
+std::string solution(const std::string& s) 
+{
     std::string lower;
-
-    for (char c : s) {
+    for (char c : s) 
+    {
         lower += std::tolower(c);
     }
 
-    bool isPalindrome = true;
     int len = static_cast<int>(lower.length());
-
-    for (int i = 0; i < len / 2; ++i) {
-        if (lower[i] != lower[len - i - 1]) {
-            isPalindrome = false;
-            break;
-        }
+    for (int i = 0; i < len / 2; ++i) 
+    {
+        if (lower[i] != lower[len - i - 1]) return "NO";
     }
 
-    std::cout << (isPalindrome ? "YES" : "NO") << std::endl;
+    return "YES";
+}
+
+int main() 
+{
+    std::string str = "goooG";
+    std::cout << solution(str) << std::endl;
     return 0;
 }
 
 
+
+
 //////////////////////////////////////////////////////////////////
-✅ 2. 유효한 팰린드롬 (2. 유효한 팰린드롬.txt)
+✅ 2. 유효한 팰린드롬
 #include <iostream>
 #include <string>
 #include <cctype>
 
-int main() {
-    std::string s = "found7, time: study; Yduts; emit, 7Dnuof";
+std::string solution(const std::string& s) 
+{
     std::string cleaned;
-
-    for (char c : s) {
-        if (std::isalpha(c)) {
-            cleaned += std::tolower(c);
-        }
+    for (char c : s) 
+    {
+        if (std::isalpha(c)) cleaned += std::tolower(c);
     }
 
-    bool isPalindrome = true;
     int len = static_cast<int>(cleaned.length());
-
-    for (int i = 0; i < len / 2; ++i) {
-        if (cleaned[i] != cleaned[len - i - 1]) {
-            isPalindrome = false;
-            break;
-        }
+    for (int i = 0; i < len / 2; ++i) 
+    {
+        if (cleaned[i] != cleaned[len - i - 1]) return "NO";
     }
 
-    std::cout << (isPalindrome ? "YES" : "NO") << std::endl;
+    return "YES";
+}
+
+int main() 
+{
+    std::string str = "found7, time: study; Yduts; emit, 7Dnuof";
+    std::cout << solution(str) << std::endl;
     return 0;
 }
 
 
+
+
 //////////////////////////////////////////////////////////////////
-✅ 3. 숫자만 추출 (3. 숫자만 추출.txt)
+✅ 3. 숫자만 추출
 #include <iostream>
 #include <string>
 #include <cctype>
 
-int main() {
-    std::string str = "g0en2T0s8eSoft";
+int solution(const std::string& str) 
+{
     std::string digits;
-
-    for (char c : str) {
-        if (std::isdigit(c)) {
-            digits += c;
-        }
+    for (char c : str) 
+    {
+        if (std::isdigit(c)) digits += c;
     }
+    return std::stoi(digits);
+}
 
-    int result = std::stoi(digits);
-    std::cout << result << std::endl;
+int main() 
+{
+    std::string str = "g0en2T0s8eSoft";
+    std::cout << solution(str) << std::endl;
     return 0;
 }
 
 
+
+
 //////////////////////////////////////////////////////////////////
-✅ 4. 가장 짧은 문자거리 (4. 가장 짧은 문자거리.txt)
+✅ 4. 가장 짧은 문자거리
 #include <iostream>
 #include <vector>
 #include <string>
 #include <algorithm>
 
-int main() {
-    std::string s = "teachermode";
-    char t = 'e';
-    std::vector<int> answer(s.length(), 0);
-
+std::vector<int> solution(const std::string& s, char t) 
+{
+    std::vector<int> answer(s.length());
     int p = 1000;
-    for (std::size_t i = 0; i < s.length(); ++i) {
-        if (s[i] == t) {
-            p = 0;
-            answer[i] = p;
-        } else {
-            ++p;
-            answer[i] = p;
-        }
+
+    for (std::size_t i = 0; i < s.length(); ++i) 
+    {
+        if (s[i] == t) p = 0;
+        else ++p;
+        answer[i] = p;
     }
 
     p = 1000;
-    for (int i = static_cast<int>(s.length()) - 1; i >= 0; --i) {
-        if (s[i] == t) {
-            p = 0;
-        } else {
-            ++p;
-            answer[i] = std::min(answer[i], p);
-        }
+    for (int i = static_cast<int>(s.length()) - 1; i >= 0; --i) 
+    {
+        if (s[i] == t) p = 0;
+        else ++p;
+        answer[i] = std::min(answer[i], p);
     }
 
-    for (int val : answer) {
-        std::cout << val << " ";
-    }
+    return answer;
+}
+
+int main() 
+{
+    std::string str = "teachermode";
+    char target = 'e';
+    std::vector<int> result = solution(str, target);
+    for (int x : result) std::cout << x << " ";
     std::cout << std::endl;
     return 0;
 }
 
 
+
+
 //////////////////////////////////////////////////////////////////
-✅ 5. 문자열 압축 (5. 문자열 압축.txt)
+✅ 5. 문자열 압축
 #include <iostream>
 #include <string>
 
-int main() {
-    std::string s = "KKHSSSSSSSE";
-    std::string answer = "";
+std::string solution(const std::string& s) 
+{
+    std::string result;
     int cnt = 1;
+    std::string str = s + ' ';
 
-    s += ' '; // sentinel 문자
-
-    for (std::size_t i = 0; i < s.length() - 1; ++i) {
-        if (s[i] == s[i + 1]) {
-            ++cnt;
-        } else {
-            answer += s[i];
-            if (cnt > 1) {
-                answer += std::to_string(cnt);
-            }
+    for (std::size_t i = 0; i < str.length() - 1; ++i) 
+    {
+        if (str[i] == str[i + 1]) ++cnt;
+        else 
+        {
+            result += str[i];
+            if (cnt > 1) result += std::to_string(cnt);
             cnt = 1;
         }
     }
 
-    std::cout << answer << std::endl;
+    return result;
+}
+
+int main() 
+{
+    std::string str = "KKHSSSSSSSE";
+    std::cout << solution(str) << std::endl;
     return 0;
 }
