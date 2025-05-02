@@ -1,0 +1,647 @@
+/////////////////////////////////////////////////////////////////////
+✅ 1. 큰 수 출력하기
+#include <iostream>
+#include <vector>
+
+    std::vector<int>
+    solution(const std::vector<int> &arr) 
+    {
+  std::vector<int> answer;
+  if (!arr.empty()) answer.push_back(arr[0]);
+  for (std::size_t i = 1; i < arr.size(); ++i) 
+  {
+    if (arr[i] > arr[i - 1]) answer.push_back(arr[i]);
+  }
+  return answer;
+}
+
+int main() 
+{
+  std::vector<int> arr = 
+  {7, 3, 9, 5, 6, 12};
+  std::vector<int> result = solution(arr);
+  for (std::size_t i = 0; i < result.size(); ++i) 
+  {
+    std::cout << result[i] << " ";
+  }
+  return 0;
+}
+
+// #######################나의 풀이
+#include <iostream>
+#include <vector>
+
+std::vector<int> solution(const std::vector<int>& arr)
+{
+	std::vector<int> result;
+
+	// 자신의 바로 앞(왼쪽) 보다 큰 수만 취합한다.
+	result.push_back(arr[0]);
+
+	for (int i = 1; i < arr.size(); i++)
+	{
+		if (arr[i - 1] < arr[i])
+			result.push_back(arr[i]);
+	}
+
+	return result;
+}
+
+int main()
+{
+	std::vector<int> arr =
+	{ 7, 3, 9, 5, 6, 12 };
+	std::vector<int> result = solution(arr);
+
+	for (std::size_t i = 0; i < result.size(); ++i)
+	{
+		std::cout << result[i] << " ";
+	}
+	return 0;
+}
+
+/////////////////////////////////////////////////////////////////////
+✅ 2. 보이는 학생
+#include <iostream>
+#include <vector>
+
+    int
+    solution(const std::vector<int> &arr) 
+    {
+  if (arr.empty()) return 0;
+  int answer = 1;
+  int max_height = arr[0];
+  for (std::size_t i = 1; i < arr.size(); ++i) 
+  {
+    if (arr[i] > max_height) 
+    {
+      ++answer;
+      max_height = arr[i];
+    }
+  }
+  return answer;
+}
+
+int main() 
+{
+  std::vector<int> arr = 
+  {130, 135, 148, 140, 145, 150, 150, 153};
+  std::cout << solution(arr);
+  return 0;
+}
+
+// #######################나의 풀이
+#include <iostream>
+#include <vector>
+
+int solution(const std::vector<int>& arr)
+{
+    std::vector<int> resultArr;
+    int curMax = 0;
+
+    // 뒤에 있는애가 앞쪽보다 커야 센세가 보임
+    // 같아도 안됨.
+    // 앞에놈이 너무 컸다면 걔보다 더 큰놈이 나와야 함.
+    // 첫번째 놈은 무조건 보일거아니야?
+
+    curMax = arr[0];
+    resultArr.push_back(curMax);
+
+    for (int i = 1; i < arr.size(); i++)
+    {
+        if (arr[i] > curMax)
+        {
+            curMax = arr[i];
+            resultArr.push_back(curMax);
+        }
+    }
+
+    return resultArr.size();
+}
+
+int main()
+{
+    std::vector<int> arr =
+    { 130, 135, 148, 140, 145, 150, 150, 153 };
+    std::cout << solution(arr);
+    return 0;
+}
+
+/////////////////////////////////////////////////////////////////////
+✅ 3. 가위바위보
+#include <iostream>
+#include <vector>
+
+    void
+    solution(const std::vector<int> &a, const std::vector<int> &b) 
+    {
+  for (std::size_t i = 0; i < a.size(); ++i) 
+  {
+    if (a[i] == b[i])
+      std::cout << "D ";
+    else if ((a[i] == 1 && b[i] == 3) || (a[i] == 2 && b[i] == 1) ||
+             (a[i] == 3 && b[i] == 2))
+      std::cout << "A ";
+    else
+      std::cout << "B ";
+  }
+}
+
+int main() 
+{
+  std::vector<int> a = 
+  {2, 3, 3, 1, 3};
+  std::vector<int> b = 
+  {1, 1, 2, 2, 3};
+  solution(a, b);
+  return 0;
+}
+
+// #######################나의 풀이
+#include <iostream>
+#include <vector>
+
+std::vector<char> solution(const std::vector<int>& a, const std::vector<int>& b)
+{
+    std::vector<char> result;
+
+    if (a.size() != b.size())
+        return result;
+
+    for (int i = 0; i < a.size(); i++)
+    {
+        if (a[i] == b[i]) {
+            result.push_back('D');
+            continue;
+        }
+
+        // 이긴 경우와 그렇지 않다면 진 경우만 보면 됨.
+        if ((a[i] == 1 && b[i] == 3) || (a[i] == 2 && b[i] == 1) || (a[i] == 3 && b[i] == 2))
+        {
+            // A 가 이긴경우
+            result.push_back('A');
+        }
+        else
+        {
+            // B 가 이긴경우
+            result.push_back('B');
+        }
+        
+    }
+
+    return result;
+}
+
+int main()
+{
+    //  A가 이기면 A를 출력하고, B가 이기면 B를 출력합니다.비길 경우에는 D를
+    // 가위, 바위, 보의 정보는 1:가위, 2:바위, 3:보
+    std::vector<int> a =
+    { 2, 3, 3, 1, 3 };
+    std::vector<int> b =
+    { 1, 1, 2, 2, 3 };
+    auto result = solution(a, b);
+
+    for (auto e : result)
+    {
+        std::cout << e << std::endl;
+    }
+    return 0;
+}
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 4. 점수 계산
+#include <iostream>
+#include <vector>
+
+    int
+    solution(const std::vector<int> &arr) 
+    {
+  int answer = 0, cnt = 0;
+  for (std::size_t i = 0; i < arr.size(); ++i) 
+  {
+    if (arr[i] == 1) 
+    {
+      ++cnt;
+      answer += cnt;
+    } else 
+    {
+      cnt = 0;
+    }
+  }
+  return answer;
+}
+
+int main() 
+{
+  std::vector<int> arr = 
+  {1, 0, 1, 1, 1, 0, 0, 1, 1, 0};
+  std::cout << solution(arr);
+  return 0;
+}
+
+// #######################나의 풀이
+#include <iostream>
+#include <vector>
+
+int solution(const std::vector<int>& arr)
+{
+    // 문제 맞추면 1점
+    // 콤보가 갈수록 점수 1점씩 올라감.
+    // 연속 3개? 1, 2, 3점 
+    // 콤보 깨지면 다시 1점부터
+
+    int result = 0;
+    int combo = 0;
+
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (arr[i] == 1)
+        {
+            combo++;
+            result += combo;
+        }
+        else 
+        {
+            combo = 0;
+        }
+    }
+
+    return result;
+}
+
+int main()
+{
+    // 채점 결과이다 -> 점수를 구해주면 됨.
+    std::vector<int> arr =
+    { 1, 0, 1, 1, 1, 0, 0, 1, 1, 0 };
+    std::cout << solution(arr);
+    return 0;
+}
+
+/////////////////////////////////////////////////////////////////////
+✅ 5. 등수 구하기
+#include <iostream>
+#include <vector>
+
+    std::vector<int>
+    solution(const std::vector<int> &arr) 
+    {
+  std::vector<int> answer(arr.size(), 1);
+  for (std::size_t i = 0; i < arr.size(); ++i) 
+  {
+    for (std::size_t j = 0; j < arr.size(); ++j) 
+    {
+      // 작은놈은 밀리게 되는데 -> 등수가 떨어진다(등수넘버 증가)
+      if (arr[j] > arr[i]) ++answer[i];
+    }
+  }
+  return answer;
+}
+
+int main() 
+{
+  std::vector<int> arr = 
+  {87, 89, 92, 100, 76};
+  std::vector<int> result = solution(arr);
+  for (std::size_t i = 0; i < result.size(); ++i) 
+  {
+    std::cout << result[i] << " ";
+  }
+  return 0;
+}
+
+// #######################나의 풀이
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+std::vector<int> solution(const std::vector<int>& arr)
+{
+    std::vector<int> result = arr;
+    std::sort(result.begin(), result.end()
+        , [&](const int& a, const int& b)
+        {
+            return a > b;
+        });
+    std::vector<int> result2;
+
+    for (int i = 0; i < arr.size(); i++)
+    {
+        /*
+            // vector 에서 std::find() 한거 인덱스 구하기
+            auto it = std::find(result.begin(), result.end(), arr[i]);
+            if (it != result.end())
+            {
+                // 현재에서 시작지점을 빼면 인덱스가 나옴
+                int index = static_cast<int>(it - result.begin());
+            }
+        */
+        auto it = std::find(result.begin(), result.end(), arr[i]);
+
+        if (it != result.end())
+        {
+            int index = static_cast<int>(it - result.begin());
+            result2.push_back(index + 1);
+        }
+    }
+        
+    return result2;
+}
+
+int main()
+{
+    // 국어 점수에 대해서 
+    // 얘네들이 각 점수가 몇등인지
+    // 순서 그대로 출력하기
+    std::vector<int> arr =
+    { 87, 89, 92, 100, 76 };
+    std::vector<int> result = solution(arr);
+    for (std::size_t i = 0; i < result.size(); ++i)
+    {
+        std::cout << result[i] << " ";
+    }
+    return 0;
+}
+
+// ####################### gpt 젤 빠름.
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <unordered_map>
+
+std::vector<int> solution(const std::vector<int>& arr)
+{
+    std::vector<int> sorted = arr;
+    // 점수들을 정렬했음. -> 등수(인덱스) 대로 점수 나열됨.
+    std::sort(sorted.begin(), sorted.end(), std::greater<int>());
+
+    std::unordered_map<int, int> rankMap;
+    int rank = 1;
+
+    // 등수 기준으로 올라가면서, 점수를 키로 넣음 -> 검색해야하니께께
+    for (std::size_t i = 0; i < sorted.size(); ++i)
+    {
+        if (rankMap.find(sorted[i]) == rankMap.end())
+        {
+            rankMap[sorted[i]] = rank;
+        }
+        ++rank;
+    }
+
+    std::vector<int> result;
+    result.reserve(arr.size());
+    for (int score : arr)
+    {
+        // 해당 점수(키) 가 몇등이었는지 넣어서 리턴.
+        result.push_back(rankMap[score]);
+    }
+
+    return result;
+}
+
+int main()
+{
+    // 국어 점수에 대해서 
+    // 얘네들이 각 점수가 몇등인지
+    // 순서 그대로 출력하기
+    std::vector<int> arr =
+    { 87, 89, 92, 100, 76 };
+    std::vector<int> result = solution(arr);
+    for (std::size_t i = 0; i < result.size(); ++i)
+    {
+        std::cout << result[i] << " ";
+    }
+    return 0;
+}
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 6. 격자판 최대합
+#include <algorithm>
+#include <climits>
+#include <iostream>
+#include <vector>
+
+    int
+    solution(const std::vector<std::vector<int>> &arr) 
+    {
+  int n = static_cast<int>(arr.size());
+  int answer = INT_MIN;
+  for (int i = 0; i < n; ++i) 
+  {
+    int row_sum = 0, col_sum = 0;
+    for (int j = 0; j < n; ++j) 
+    {
+      row_sum += arr[i][j];
+      col_sum += arr[j][i];
+    }
+    answer = std::max(answer, std::max(row_sum, col_sum));
+  }
+
+  // 대각선 -> diagonal 다이애그날
+  int diag1 = 0, diag2 = 0;
+  for (int i = 0; i < n; ++i) 
+  {
+    diag1 += arr[i][i];
+    diag2 += arr[i][n - i - 1];
+  }
+  return std::max(answer, std::max(diag1, diag2));
+}
+
+int main() 
+{
+  std::vector<std::vector<int>> arr = 
+  {
+
+      
+    {10, 13, 10, 12, 15},
+      
+      {12, 39, 30, 23, 11},
+      
+      {11, 25, 50, 53, 15},
+      
+      {19, 27, 29, 37, 27},
+      
+      {19, 13, 30, 13, 19}};
+  std::cout << solution(arr);
+  return 0;
+}
+
+
+// #######################나의 풀이
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+// for문은 반복의 수단
+// 거기안에서 인덱스를 어떻게 할것인지 생각해 봐야 함 -> 규칙을 찾아야함
+int solution(const std::vector<std::vector<int>>& arr)
+{
+	int max_sum = 0;
+	int resultSumMax = 0;
+
+	// for문을 그냥 횟수라고 생각하자.
+	for (int i = 0; i < arr.size(); i++)
+	{
+		int rowSum = 0;
+		int colSum = 0;
+
+		for (int j = 0; j < arr.size(); j++)
+		{
+			rowSum += arr[i][j];
+			colSum += arr[j][i];
+		}
+
+		resultSumMax = std::max(resultSumMax, std::max(rowSum, colSum));
+	}
+
+	// diagonal
+	int diagonalSum1 = 0;
+	int diagonalSum2 = 0;
+
+	for (int i = 0; i < arr.size(); i++)
+	{
+		diagonalSum1 += arr[i][i];
+		diagonalSum2 += arr[i][arr.size() - 1 - i];
+	}
+
+	resultSumMax = std::max(resultSumMax, std::max(diagonalSum1, diagonalSum2));
+
+	return resultSumMax;
+}
+
+int main()
+{
+	std::vector<std::vector<int>> arr =
+	{
+		{10, 13, 10, 12, 15},
+		{12, 39, 30, 23, 11},
+		{11, 25, 50, 53, 15},
+		{19, 27, 29, 37, 27},
+		{19, 13, 30, 13, 19}
+	};
+
+	std::cout << solution(arr);
+	return 0;
+}
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 7. 봉우리
+
+#include <iostream>
+#include <vector>
+
+int solution(const std::vector<std::vector<int>>& arr)
+{
+	int answer = 0;
+	int dx[] = { -1, 0, 1, 0 };
+	int dy[] = { 0, 1, 0, -1 };
+	int n = static_cast<int>(arr.size());
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			bool isPeak = true;
+
+			for (int k = 0; k < 4; ++k)
+			{
+				int nx = i + dx[k];
+				int ny = j + dy[k];
+
+				if (nx >= 0 && nx < n && ny >= 0 && ny < n &&
+					arr[nx][ny] >= arr[i][j])
+				{
+					isPeak = false;
+					break;
+				}
+			}
+			if (isPeak) ++answer;
+		}
+	}
+	return answer;
+}
+
+int main()
+{
+	std::vector<std::vector<int>> arr =
+	{
+		{5, 3, 7, 2, 3},
+		{3, 7, 1, 6, 1},
+		{7, 2, 5, 3, 4},
+		{4, 3, 6, 4, 1},
+		{8, 7, 3, 5, 2}
+	};
+
+	std::cout << solution(arr);
+	return 0;
+}
+
+
+
+// #######################나의 풀이
+#include <iostream>
+#include <vector>
+
+int solution(const std::vector<std::vector<int>>& arr)
+{
+	// 자신의 상하좌우 보다 크면 봉우리임.
+	// 배열을 두르는 가장자리들은 0 이라고 가정.
+	int size = arr.size();
+	int result = 0;
+
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			// 상
+			if (i > 0)
+			{
+				if (arr[i][j] < arr[i - 1][j])
+					continue;
+			}
+			// 하
+			if (i < size - 1)
+			{
+				if (arr[i][j] < arr[i + 1][j])
+					continue;
+			}
+
+			// 좌
+			if (j > 0)
+			{
+				if (arr[i][j] < arr[i][j - 1])
+					continue;
+			}
+			// 우
+			if (j < size - 1)
+			{
+				if (arr[i][j] < arr[i][j + 1])
+					continue;
+			}
+
+			// 모두 통과했다면 봉우리인것.
+			result++;
+		}
+	}
+
+	return result;
+}
+
+int main()
+{
+	std::vector<std::vector<int>> arr =
+	{
+		{5, 3, 7, 2, 3},
+		{3, 7, 1, 6, 1},
+		{7, 2, 5, 3, 4},
+		{4, 3, 6, 4, 1},
+		{8, 7, 3, 5, 2}
+	};
+
+	std::cout << solution(arr);
+	return 0;
+}

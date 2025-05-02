@@ -1,0 +1,150 @@
+//////////////////////////////////////////////////////////////////
+✅ 1. 회문 문자열 (1. 회문문자열.txt)
+#include <iostream>
+#include <string>
+#include <cctype>
+
+int main() {
+    std::string s = "goooG";
+    std::string lower;
+
+    for (char c : s) {
+        lower += std::tolower(c);
+    }
+
+    bool isPalindrome = true;
+    int len = static_cast<int>(lower.length());
+
+    for (int i = 0; i < len / 2; ++i) {
+        if (lower[i] != lower[len - i - 1]) {
+            isPalindrome = false;
+            break;
+        }
+    }
+
+    std::cout << (isPalindrome ? "YES" : "NO") << std::endl;
+    return 0;
+}
+
+
+//////////////////////////////////////////////////////////////////
+✅ 2. 유효한 팰린드롬 (2. 유효한 팰린드롬.txt)
+#include <iostream>
+#include <string>
+#include <cctype>
+
+int main() {
+    std::string s = "found7, time: study; Yduts; emit, 7Dnuof";
+    std::string cleaned;
+
+    for (char c : s) {
+        if (std::isalpha(c)) {
+            cleaned += std::tolower(c);
+        }
+    }
+
+    bool isPalindrome = true;
+    int len = static_cast<int>(cleaned.length());
+
+    for (int i = 0; i < len / 2; ++i) {
+        if (cleaned[i] != cleaned[len - i - 1]) {
+            isPalindrome = false;
+            break;
+        }
+    }
+
+    std::cout << (isPalindrome ? "YES" : "NO") << std::endl;
+    return 0;
+}
+
+
+//////////////////////////////////////////////////////////////////
+✅ 3. 숫자만 추출 (3. 숫자만 추출.txt)
+#include <iostream>
+#include <string>
+#include <cctype>
+
+int main() {
+    std::string str = "g0en2T0s8eSoft";
+    std::string digits;
+
+    for (char c : str) {
+        if (std::isdigit(c)) {
+            digits += c;
+        }
+    }
+
+    int result = std::stoi(digits);
+    std::cout << result << std::endl;
+    return 0;
+}
+
+
+//////////////////////////////////////////////////////////////////
+✅ 4. 가장 짧은 문자거리 (4. 가장 짧은 문자거리.txt)
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+int main() {
+    std::string s = "teachermode";
+    char t = 'e';
+    std::vector<int> answer(s.length(), 0);
+
+    int p = 1000;
+    for (std::size_t i = 0; i < s.length(); ++i) {
+        if (s[i] == t) {
+            p = 0;
+            answer[i] = p;
+        } else {
+            ++p;
+            answer[i] = p;
+        }
+    }
+
+    p = 1000;
+    for (int i = static_cast<int>(s.length()) - 1; i >= 0; --i) {
+        if (s[i] == t) {
+            p = 0;
+        } else {
+            ++p;
+            answer[i] = std::min(answer[i], p);
+        }
+    }
+
+    for (int val : answer) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+    return 0;
+}
+
+
+//////////////////////////////////////////////////////////////////
+✅ 5. 문자열 압축 (5. 문자열 압축.txt)
+#include <iostream>
+#include <string>
+
+int main() {
+    std::string s = "KKHSSSSSSSE";
+    std::string answer = "";
+    int cnt = 1;
+
+    s += ' '; // sentinel 문자
+
+    for (std::size_t i = 0; i < s.length() - 1; ++i) {
+        if (s[i] == s[i + 1]) {
+            ++cnt;
+        } else {
+            answer += s[i];
+            if (cnt > 1) {
+                answer += std::to_string(cnt);
+            }
+            cnt = 1;
+        }
+    }
+
+    std::cout << answer << std::endl;
+    return 0;
+}
