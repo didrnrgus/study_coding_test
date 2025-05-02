@@ -29,6 +29,31 @@ int main()
 }
 
 
+// #######################나의 풀이
+#include <iostream>
+#include <string>
+#include <cctype>
+
+std::string solution(const std::string& s)
+{
+    std::string result;
+    int size = s.size();
+
+    for (int i = 0; i < size / 2; i++)
+    {
+        if(toupper(s[i]) != toupper(s[size-1-i]))
+            return "NO";
+    }
+
+    return "YES";
+}
+
+int main()
+{
+    std::string str = "goooG";
+    std::cout << solution(str) << std::endl;
+    return 0;
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -61,7 +86,45 @@ int main()
     return 0;
 }
 
+// #######################나의 풀이
+#include <iostream>
+#include <string>
+#include <cctype>
 
+/*
+    std::isalpha(c))
+    알파뱃인지 아닌지 판별함.
+*/
+std::string solution(const std::string& s)
+{
+    std::string removed;
+    for (int i = 0; i < s.size(); i++)
+    {
+        if (std::isalpha(s[i]))
+        {
+            removed += std::tolower(s[i]);
+        }
+    }
+
+    int size = removed.size();
+
+    for (int i = 0; i < size / 2; i++)
+    {
+        if (removed[i] != removed[size - 1 - i])
+        {
+            return "NO";
+        }
+    }
+
+    return "YES";
+}
+
+int main()
+{
+    std::string str = "found7, time: study; Yduts; emit, 7Dnuof";
+    std::cout << solution(str) << std::endl;
+    return 0;
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -88,7 +151,36 @@ int main()
 }
 
 
+// #######################나의 풀이
+#include <iostream>
+#include <string>
+#include <cctype>
 
+/*
+    std::isDigit(c)     // 숫자인지
+    std::stoi(dgits)    // 스트링 -> 숫자 
+*/
+int solution(const std::string& str)
+{
+    std::string numStr;
+
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (isdigit(str[i]))
+        {
+            numStr += str[i];
+        }
+    }
+
+    return std::stoi(numStr);
+}
+
+int main()
+{
+    std::string str = "g0en2T0s8eSoft";
+    std::cout << solution(str) << std::endl;
+    return 0;
+}
 
 //////////////////////////////////////////////////////////////////
 ✅ 4. 가장 짧은 문자거리
