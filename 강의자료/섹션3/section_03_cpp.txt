@@ -223,7 +223,63 @@ int main()
 }
 
 
+// #######################나의 풀이
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
 
+std::vector<int> solution(const std::string& s, char t)
+{
+    // 현재 갹 t 위치를 알아낸다.
+    // 1 2 1 2 3 4 1 2 3 4 5
+    // 내가 그냥 풀어본것 코드 x
+    // 왼쪽에서 오른쪽으로 훑고
+    // 오른쪽에서 왼쪽으로 훑고
+
+    std::vector<int> result(s.size());
+    int size = s.size();
+    int a = 0;
+
+    for (int i = 0; i < size; i++)
+    {
+        if (t == s[i])
+        {
+            a = 0;
+        }
+        else {
+            a++;
+        }
+        result[i] = a;
+    }
+
+    a = 0;
+
+    for (int i = size - 1; i >= 0; i--)
+    {
+        if (t == s[i])
+        {
+            a = 0;
+        }
+        else {
+            a++;
+        }
+
+        result[i] = result[i] > a ? a : result[i];
+    }
+
+    return result;
+}
+
+int main()
+{
+    std::string str = "teachermode";
+    char target = 'e';
+    std::vector<int> result = solution(str, target);
+    for (int x : result) std::cout << x << " ";
+    std::cout << std::endl;
+    return 0;
+}
 
 //////////////////////////////////////////////////////////////////
 ✅ 5. 문자열 압축
@@ -253,6 +309,64 @@ std::string solution(const std::string& s)
 int main() 
 {
     std::string str = "KKHSSSSSSSE";
+    std::cout << solution(str) << std::endl;
+    return 0;
+}
+
+
+// #######################나의 풀이
+#include <iostream>
+#include <string>
+
+
+std::string solution(const std::string& s)
+{
+    char curChar = '\n';
+    int curCount = 0;
+    std::string result;
+    
+    result += s[0];
+    curChar = s[0];
+    curCount = 1;
+
+    for (int i = 1; i < s.size(); i++)
+    {
+        if (s[i] == curChar)
+        {
+            curCount++;
+
+            // 라스트?
+            if (i == s.size() - 1)
+            {
+                // 기존꺼 저장해줌.
+                if (curCount > 1)
+                    result += std::to_string(curCount);
+            }
+        }
+        else 
+        {
+            // 새로운거
+
+            // 기존꺼 저장해줌.
+            if(curCount >1)
+                result += std::to_string(curCount);
+            
+            // 새로운거 저장.
+            result += s[i];
+
+            // 새로운거 세팅.
+            curChar = s[i];
+            curCount = 1;
+        }
+    }
+
+
+    return result;
+}
+
+int main()
+{
+    std::string str = "KKHSSSSSSSEE";
     std::cout << solution(str) << std::endl;
     return 0;
 }
