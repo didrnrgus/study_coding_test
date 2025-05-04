@@ -1,0 +1,667 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////
+✅ 1. 두 배열 합치기 (1. 두 배열 합치기.txt)
+
+#include <iostream>
+#include <vector>
+
+std::vector<int> solution(const std::vector<int>& arr1, const std::vector<int>& arr2)
+{
+    std::vector<int> answer;
+    std::size_t p1 = 0, p2 = 0;
+
+    // 둘중 하나의 인덱스를 다 훑을때까지 보는 방식
+    // 개 배열을 정렬하면서 넣고 있다.
+    while (p1 < arr1.size() && p2 < arr2.size())
+    {
+        if (arr1[p1] <= arr2[p2])
+            answer.push_back(arr1[p1++]);
+        else
+            answer.push_back(arr2[p2++]);
+    }
+
+    // 이젠 미처 다 못한 둘중 하나를 마저 채우는 형식식
+    while (p1 < arr1.size()) answer.push_back(arr1[p1++]);
+    while (p2 < arr2.size()) answer.push_back(arr2[p2++]);
+
+    return answer;
+}
+
+int main()
+{
+    std::vector<int> a = {1, 3, 5};
+    std::vector<int> b = {2, 3, 6, 7, 9};
+    std::vector<int> result = solution(a, b);
+
+    for (int x : result)
+        std::cout << x << " ";
+    return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+std::vector<int> solution(const std::vector<int>& arr1, const std::vector<int>& arr2)
+{
+    // 오름차운으로 정렬이 된 두 배열
+    // 두 배열을 오름차순으로 합쳐 출력
+    // 각 리스트의 원소는 int 변수 크기를 넘지 않음.
+
+    int sizeArr1 = arr1.size();
+    int sizeArr2 = arr2.size();
+    std::vector<int> result;
+
+    result.insert(result.end(), arr1.begin(), arr1.end());
+    result.insert(result.end(), arr2.begin(), arr2.end());
+    
+    std::sort(result.begin(), result.begin() + result.size());
+    return result;
+}
+
+int main()
+{
+    std::vector<int> a = { 1, 3, 5 };
+    std::vector<int> b = { 2, 3, 6, 7, 9 };
+    std::vector<int> result = solution(a, b);
+
+    for (int x : result)
+        std::cout << x << " ";
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+✅ 2. 공통원소 구하기 (2. 공통원소구하기.txt)
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+std::vector<int> solution(std::vector<int> arr1, std::vector<int> arr2)
+{
+    std::vector<int> answer;
+    std::sort(arr1.begin(), arr1.end());
+    std::sort(arr2.begin(), arr2.end());
+
+    std::size_t p1 = 0, p2 = 0;
+    while (p1 < arr1.size() && p2 < arr2.size())
+    {
+        if (arr1[p1] == arr2[p2])
+        {
+            answer.push_back(arr1[p1]);
+            p1++; p2++;
+        }
+        else if (arr1[p1] < arr2[p2]) p1++;
+        else p2++;
+    }
+
+    return answer;
+}
+
+int main()
+{
+    std::vector<int> a = {1, 3, 9, 5, 2};
+    std::vector<int> b = {3, 2, 5, 7, 8};
+    std::vector<int> result = solution(a, b);
+
+    for (int x : result)
+        std::cout << x << " ";
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+std::vector<int> solution(std::vector<int> arr1, std::vector<int> arr2)
+{
+    // A B 두개의 집합
+    // 공통원소를 추출 -> 오른차순으로 출력
+    // 주어지는 배열들은 정렬 -> 안되어 있음.
+    // 원소가 중복되어 주어지지 않음.
+
+    // 같으면 둘다 인덱스 올리고
+    // 작으면 작은것만 인덱스 올려
+
+    int i1 = 0;
+    int i2 = 0;
+
+    int size1 = arr1.size();
+    int size2 = arr2.size();
+
+    std::sort(arr1.begin(), arr1.end());
+    std::sort(arr2.begin(), arr2.end());
+
+    std::vector<int> result;
+
+    while (i1 < size1 && i2 < size2)
+    {
+        if (arr1[i1] == arr2[i2])
+        {
+            result.push_back(arr1[i1]);
+            i1++;
+            i2++;
+        }
+        else if (arr1[i1] > arr2[i2])
+        {
+            i2++;
+        }
+        else 
+        {
+            i1++;
+        }
+    }
+
+    return result;
+
+}
+
+int main()
+{
+    std::vector<int> a = { 1, 3, 9, 5, 2 };
+    std::vector<int> b = { 3, 2, 5, 7, 8 };
+    std::vector<int> result = solution(a, b);
+
+    for (int x : result)
+        std::cout << x << " ";
+    return 0;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+✅ 3. 연속부분수열1 (3. 연속부분수열1.txt)
+
+#include <iostream>
+#include <vector>
+
+// m: 목표 합
+// arr: 입력 배열
+int solution(int m, const std::vector<int>& arr)
+{
+    int answer = 0;     // 정답(부분수열의 개수)
+    int sum = 0;        // 현재 구간의 합
+    int lt = 0;         // 왼쪽 포인터 (슬라이딩 윈도우의 시작 위치)
+
+    // 오른쪽 포인터 rt 를 오른쪽으로 이동하며 부분합을 계산
+    for (int rt = 0; rt < static_cast<int>(arr.size()); rt++)
+    {
+        sum += arr[rt]; // 현재 요소를 부분합에 추가
+
+        if (sum == m) answer++; // 현재 구간의 합이 m이면 정답 증가
+
+        // 부분합이 m 이상이면, lt를 오른쪽으로 이동시켜 sum을 줄임
+        while (sum >= m)
+        {
+            sum -= arr[lt++];   // 윈도우의 왼쪽 값을 빼고 lt 한 칸 이동
+            if (sum == m) answer++; // 뺀 후에도 합이 m이면 정답 증가
+        }
+    }
+
+    return answer;
+}
+
+int main()
+{
+    std::vector<int> a = {1, 2, 1, 3, 1, 1, 1, 2}; // 입력 배열
+    int m = 6; // 목표 합
+
+    std::cout << solution(m, a) << std::endl; // 결과 출력
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+
+int solution(int m, const std::vector<int>& arr)
+{
+    // N개로 이루어진 수열
+    // 이 수열에서 연속 부분 수열의 합이 -> 특정 숫자 M 이 되는 경우가 몇가지?
+    // 만약 N=8 M=6 이고 수열이
+    // 1 2 1 3 1 1 1 2 
+    // 합이 6이 되는 연속 부분 수열 은
+    // (2 1 3) (1 3 1 1 ) (3 1 1 1) 3가지
+
+    // 연속 부분 수열이란 
+    // -> 현재 상태를 정렬 하면 안됨
+    // -> 건너 뛰어도 안됨.
+
+    int sum = 0;
+    int resultCount = 0;
+
+    for (int idxRight = 0, idxLeft = 0; idxRight < arr.size();)
+    {
+        sum += arr[idxRight];
+
+        if (sum == m)
+        {
+            resultCount++;
+        }
+
+        while (sum > m)
+        {
+            sum -= arr[idxLeft];
+            idxLeft++;
+            if (sum == m)
+            {
+                resultCount++;
+            }
+        }
+
+        idxRight++;
+    }
+
+
+    return resultCount;
+}
+
+int main()
+{
+    std::vector<int> a = { 1, 2, 1, 3, 1, 1, 1, 2 };
+    int m = 6;
+
+    std::cout << solution(m, a) << std::endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+✅ 4. 연속부분수열2 (4. 연속부분수열2.txt)
+
+#include <iostream>
+#include <vector>
+
+// m: 최대 허용 합
+// arr: 입력 배열
+int solution(int m, const std::vector<int>& arr)
+{
+    int answer = 0; // 조건을 만족하는 연속 부분수열의 개수
+    int sum = 0;    // 현재 슬라이딩 윈도우의 합
+    int lt = 0;     // 윈도우의 왼쪽 포인터
+
+    // rt: 윈도우의 오른쪽 포인터
+    for (int rt = 0; rt < static_cast<int>(arr.size()); rt++)
+    {
+        sum += arr[rt]; // 새로운 값을 윈도우에 포함
+
+        // 현재 합이 m을 초과하면, 왼쪽 값을 빼며 줄임
+        while (sum > m)
+            sum -= arr[lt++];
+
+        // 현재 윈도우에서 가능한 연속 부분수열의 개수는 (rt - lt + 1)
+        // 예: [lt, rt] 구간에서 끝나는 모든 부분수열 → lt~rt, lt+1~rt, ..., rt~rt (총 rt-lt+1개)
+        answer += (rt - lt + 1);
+    }
+
+    return answer;
+}
+
+int main()
+{
+    std::vector<int> a = {1, 3, 1, 2, 3}; // 입력 배열
+    int m = 5; // 최대 허용 합
+
+    std::cout << solution(m, a) << std::endl; // 결과 출력
+    return 0;
+}
+
+
+#include <iostream>
+#include <vector>
+
+int solution(int m, const std::vector<int>& arr)
+{
+    // N개의 수로 이루어진 수열
+    // 연속 부분 수열의 합이 특정 숫자 M 이하가 되는 경우 몇번?
+    // 이거는 루프를 몇번씩 돌려야 할거같은데?
+
+    int sum = 0;
+    int resultCount = 0;
+
+    for (int il = 0, ir = 0;;il++)
+    {
+        sum = arr[il];
+        ir = il;
+
+        if (sum <= m)
+        {
+            resultCount++;
+        }
+        else
+        {
+            continue;
+        }
+
+        if (il == arr.size() - 1)
+            break;
+
+		while (sum <= m && ir < arr.size() - 1)
+		{
+            sum += arr[++ir];
+
+            if (sum <= m)
+            {
+                resultCount++;
+            }
+        }
+    }
+    
+    return resultCount;
+}
+
+int main()
+{
+    std::vector<int> a = { 1, 3, 1, 2, 3 };
+    int m = 5;
+
+    std::cout << solution(m, a) << std::endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+✅ 5. 최대 매출 (5. 최대 매출.txt)
+
+// 진짜 슬라이딩 윈도우는 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+// k: 연속 부분수열의 길이
+// arr: 입력 배열
+int solution(int k, const std::vector<int>& arr)
+{
+    int sum = 0;
+
+    // 초기 윈도우: 앞에서 k개 원소의 합 계산
+    for (int i = 0; i < k; i++) 
+        sum += arr[i];
+
+    int answer = sum; // 현재까지의 최대 합 초기화
+
+    // 슬라이딩 윈도우 이동: 윈도우를 오른쪽으로 한 칸씩 옮기면서 최대합 갱신
+    for (int i = k; i < static_cast<int>(arr.size()); i++)
+    {
+        // 새로 들어온 arr[i]를 더하고, 오래된 arr[i - k]를 빼서 합 갱신
+        sum += arr[i] - arr[i - k];
+
+        // 현재 윈도우 합과 기존 최대합 중 더 큰 값을 저장
+        answer = std::max(answer, sum);
+    }
+
+    return answer; // 최대 연속 부분수열 합 반환
+}
+
+int main()
+{
+    std::vector<int> a = {12, 15, 11, 20, 25, 10, 20, 19, 13, 15}; // 일별 매출 예시
+    int k = 3; // 3일 연속 매출의 최대 합을 구함
+
+    std::cout << solution(k, a) << std::endl; // 결과 출력
+    return 0;
+}
+
+📌 왜 이건 슬라이딩 윈도우가 아니다?
+📌 핵심 이유: 이전 윈도우의 계산을 재활용하지 않고 있음
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int solution(int k, const std::vector<int>&arr)
+{
+
+    // 아빠 -> 현수 N일 동안의 매출 기록
+    // 연속된 K일 동안의 최대 매출액이 얼마인지 구하라
+
+    int max = 0;
+
+    for (int il = 0, ir = 0; ir < arr.size() - 1; il++)
+    {
+        int sum = 0;
+        ir = il;
+        while (ir < il+k)
+        {
+            sum += arr[++ir];
+        }
+
+        max = max > sum ? max : sum;
+    }
+
+    return max;
+}
+
+int main()
+{
+    std::vector<int> a = { 12, 15, 11, 20, 25, 10, 20, 19, 13, 15 };
+    int k = 3;
+
+    std::cout << solution(k, a) << std::endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+✅ 6. 학급 회장 (해쉬) (6. 학급 회장(해쉬).txt)
+
+#include <iostream>
+#include <unordered_map>
+#include <string>
+
+char solution(const std::string& s)
+{
+    std::unordered_map<char, int> counter;
+    for (char c : s) counter[c]++;
+
+    int maxCount = 0;
+    char answer = ' ';
+    for (const auto& p : counter)
+    {
+        if (p.second > maxCount)
+        {
+            maxCount = p.second;
+            answer = p.first;
+        }
+    }
+
+    return answer;
+}
+
+int main()
+{
+    std::string str = "BACBACCACCBDEDE";
+    std::cout << solution(str) << std::endl;
+    return 0;
+}
+
+#include <iostream>
+#include <unordered_map>
+#include <string>
+
+char solution(const std::string& s)
+{
+    // A B C D E 후보가 있음
+    // 선생님이 쭉 발표했는데 BACBACCACCBDEDE
+    // 누가 선출 되었느닞 구하기.
+
+    std::unordered_map<char, int> vote;
+
+    for (int i = 0; i < s.size(); i++)
+    {
+        if (vote.count(s[i]))
+        {
+            vote[s[i]]++;
+        }
+        else
+        {
+            vote[s[i]] = 0;
+        }
+    }
+
+    int max = 0;
+    char maxChar;
+
+    for (auto& p : vote)
+    {
+        if (p.second > max)
+        {
+            max = p.second;
+            maxChar = p.first;
+        }
+    }
+
+    return maxChar;
+}
+
+int main()
+{
+    std::string str = "BACBACCACCBDEDE";
+    std::cout << solution(str) << std::endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+✅ 7. 아나그램 판단 (7. 아나그램.txt)
+
+#include <iostream>
+#include <unordered_map>
+#include <string>
+
+std::string solution(const std::string& str1, const std::string& str2)
+{
+    // 하나만 써도 된다
+    std::unordered_map<char, int> counter;
+
+    // 하나를 기준 잡고
+    for (char c : str1) counter[c]++;
+
+    // 나머지 하나를 기준이랑 비교한다.
+    for (char c : str2)
+    {
+        if (counter[c] == 0) return "NO";
+        counter[c]--;
+    }
+
+    return "YES";
+}
+
+int main()
+{
+    std::string a = "AbaAeCe";
+    std::string b = "baeeACA";
+
+    std::cout << solution(a, b) << std::endl;
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <unordered_map>
+#include <string>
+
+std::string solution(const std::string& str1, const std::string& str2)
+{
+    // Anagram이란  두  문자열이  알파벳의  나열  순서를  다르지만  
+    // 그  구성이  일치하면  두  단어는  아나그램이라고 합니다.
+    // 예를  들면  AbaAeCe  와  baeeACA  는  알파벳을  나열  순서는  다르지만
+    // 그  구성을  살펴보면 A(2), a(1), b(1), C(1), e(2)로  
+    // 알파벳과  그  개수가  모두  일치합니다.
+    // 즉  어느  한  단어를  재배열하면 상대편 단어가 될 수 있는 것을 아나그램이라 합니다.
+    // 길이가 같은  두  개의 단어가 주어지면  
+    // 두  단어가 아나그램인지 판별하는 프로그램을 작성하세요.
+    // 아나그램 판별시 대소문자가 구분됩니다
+
+    std::unordered_map<char, int> map1;
+    std::unordered_map<char, int> map2;
+
+    for (int i = 0; i < str1.size(); i++)
+    {
+        map1[str1[i]]++;
+        map2[str2[i]]++;
+    }
+
+    for (auto p1 : map1)
+    {
+        if (p1.second != map2[p1.first])
+        {
+            return "NO";
+        }
+    }
+
+    return "YES";
+}
+
+int main()
+{
+    std::string a = "AbaAeCe";
+    std::string b = "baeeACA";
+
+    std::cout << solution(a, b) << std::endl;
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+✅ 8. 모든 아나그램 찾기 (8. 모든 아나그램.txt)
+
+#include <iostream>
+#include <unordered_map>
+#include <string>
+
+// 두 맵이 동일한지(= 아나그램 관계인지) 비교하는 함수
+bool compareMaps(const std::unordered_map<char, int>& m1, const std::unordered_map<char, int>& m2)
+{
+    if (m1.size() != m2.size()) return false; // 크기 다르면 아예 다름
+    for (const auto& p : m1)
+    {
+        // 키 없거나 값 다르면 false
+        if (m2.find(p.first) == m2.end() || m2.at(p.first) != p.second)
+            return false;
+    }
+    return true;
+}
+
+// s에서 t의 아나그램이 되는 부분 문자열 개수 구하기
+int solution(const std::string& s, const std::string& t)
+{
+    std::unordered_map<char, int> tMap, sMap;
+
+    // t 문자열의 문자 개수를 해시맵에 저장
+    for (char c : t) tMap[c]++;
+
+    int len = static_cast<int>(t.size());
+
+    // 슬라이딩 윈도우 준비: 처음 len - 1까지 문자 카운팅
+    for (int i = 0; i < len - 1; i++)
+        sMap[s[i]]++;
+
+    int lt = 0, answer = 0;
+
+    // 슬라이딩 윈도우 시작
+    for (int rt = len - 1; rt < static_cast<int>(s.size()); rt++)
+    {
+        sMap[s[rt]]++; // 오른쪽 문자 추가
+
+        // 현재 윈도우 내 문자 구성과 tMap 비교
+        if (compareMaps(sMap, tMap)) 
+            answer++;
+
+        // 왼쪽 문자 제거 (윈도우 이동 준비)
+        sMap[s[lt]]--;
+        if (sMap[s[lt]] == 0) 
+            sMap.erase(s[lt]); // 개수가 0이면 맵에서 제거
+
+        lt++; // 왼쪽 포인터 이동
+    }
+
+    return answer;
+}
+
+int main()
+{
+    std::string a = "bacaAacba";
+    std::string b = "abc";
+
+    std::cout << solution(a, b) << std::endl; // 결과 출력
+    return 0;
+}
