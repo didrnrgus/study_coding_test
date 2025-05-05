@@ -306,42 +306,185 @@ int main()
 }
 
 
-
-
-
-//////////////////////////////////////////////////////////////////
-✅ 5. 쇠막대기
-
 #include <iostream>
 #include <stack>
 #include <string>
+#include <cctype>
+
+/*
+
+'A' → 65
+'a' → 97
+'0' → 48
+' ' (space) → 32
+
+*/
 
 int solution(const std::string& s)
 {
-    std::stack<char> stack;
-    int answer = 0;
-    for (std::size_t i = 0; i < s.size(); ++i)
+    // 숫자는 스택에 쌓고, 연산자가 나오면 숫자 하나 뽑아서 
+    // A -> 연산자 -> B 순으로 넣어 연산한다.
+
+    std::stack<char> _stack;
+    int result = 0;
+
+    for (int i = 0; i < s.size(); i++)
     {
-        if (s[i] == '(') {
-            stack.push('(');
-        } else {
-            stack.pop();
-            if (s[i - 1] == '(') {
-                answer += stack.size();
-            } else {
-                answer++;
-            }
+        if (std::isdigit(s[i]))
+        {
+            // '3' '5' '2' -> 그냥 숫자가 아니라 아스키 값이들어가서
+            // '0' 을 빼주면 됨.
+            _stack.push(s[i] - '0');
+        }
+        else
+        {
+            int b = _stack.top();
+            _stack.pop();
+
+            int a = _stack.top();
+            _stack.pop();
+
+            if (s[i] == '+') _stack.push(a + b);
+            else if (s[i] == '-') _stack.push(a - b);
+            else if (s[i] == '*') _stack.push(a * b);
+            else if (s[i] == '/') _stack.push(a / b);
         }
     }
-    return answer;
+
+    return _stack.top();
 }
 
 int main()
 {
-    std::string str = "()(((()())(())()))(())";
-    std::cout << solution(str) << std::endl; // 결과: 17
+    std::string str = "352+*9-";
+    std::cout << solution(str) << std::endl; // 결과: 12
     return 0;
 }
+
+////////////////////////////////////////////////////////////
+/*
+
+
+#include <iostream>
+#include <stack>
+#include <string>
+#include <cctype>  // std::isdigit
+
+// 연산자의 우선순위를 반환하는 함수
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;  // +, - 는 낮은 우선순위
+    if (op == '*' || op == '/') return 2;  // *, / 는 높은 우선순위
+    return 0;
+}
+
+// 중위식을 후위식으로 변환하는 함수
+std::string infixToPostfix(const std::string& infix) {
+    std::string postfix;      // 결과로 반환할 후위표기식
+    std::stack<char> st;      // 연산자를 담는 스택
+
+    for (char ch : infix) {
+        if (std::isspace(ch)) continue;  // 공백 무시
+
+        if (std::isdigit(ch)) {
+            // 숫자라면 결과 문자열에 추가
+            postfix += ch;
+            postfix += ' ';  // 숫자 구분을 위한 공백 추가
+        }
+        else if (ch == '(') {
+            // 여는 괄호는 무조건 스택에 push
+            st.push(ch);
+        }
+        else if (ch == ')') {
+            // 닫는 괄호는 여는 괄호가 나올 때까지 pop
+            while (!st.empty() && st.top() != '(') {
+                postfix += st.top();
+                postfix += ' ';
+                st.pop();
+            }
+            if (!st.empty()) st.pop();  // '(' 제거
+        }
+        else {
+            // 연산자라면, 우선순위에 따라 스택에서 pop 후 push
+            while (!st.empty() && precedence(st.top()) >= precedence(ch)) {
+                postfix += st.top();
+                postfix += ' ';
+                st.pop();
+            }
+            st.push(ch);
+        }
+    }
+
+    // 남아있는 연산자들 모두 pop
+    while (!st.empty()) {
+        postfix += st.top();
+        postfix += ' ';
+        st.pop();
+    }
+
+    return postfix;
+}
+
+int main() {
+    std::string infix = "3 + 4 * 2 / ( 1 - 5 )";
+    std::string postfix = infixToPostfix(infix);
+    std::cout << "Postfix: " << postfix << std::endl;
+}
+*/
+
+
+//////////////////////////////////////////////////////////////////
+✅ 5. 쇠막대기
+#include <iostream>
+#include <stack>
+#include <string>
+
+// 괄호 문자열을 분석하여 잘려진 막대 조각 수를 반환
+int solution(const std::string& s)
+{
+	std::stack<char> stack;  // 현재 열려있는 '(' 괄호(막대 시작)를 추적하는 스택
+	int answer = 0;          // 잘려진 조각 수
+
+	for (std::size_t i = 0; i < s.size(); ++i)
+	{
+		if (s[i] == '(')
+		{
+			// 여는 괄호이면 스택에 push (막대 시작 또는 레이저 시작)
+			stack.push('(');
+		}
+		else
+		{
+			// 닫는 괄호인 경우, 앞의 여는 괄호와 짝을 이루므로 pop
+			stack.pop();
+
+			if (s[i - 1] == '(')
+			{
+				// 바로 앞이 '('인 경우: '()' → 레이저
+				// 현재 열려있는 막대 수만큼 조각이 생김
+				answer += stack.size();
+			}
+			else
+			{
+				// 바로 앞이 ')'인 경우: 막대의 끝
+				// 막대 하나의 끝이므로 조각 1개 추가
+				answer++;
+			}
+		}
+	}
+
+	return answer;
+}
+
+int main()
+{
+	std::string str = "()(((()())(())()))(())";
+
+	// 위 문자열은 레이저와 쇠막대기를 표현한 것으로,
+	// 결과적으로 잘려진 막대 조각의 총 개수는 17개
+	std::cout << solution(str) << std::endl; // 출력: 17
+
+	return 0;
+}
+
 
 
 
@@ -381,6 +524,55 @@ int main()
 
 
 
+#include <iostream>
+#include <queue>
+
+int solution(int n, int k)
+{
+	 // 왕자 N명
+	 // 나이순으로 1~N 까지 차례로 번호매김.
+	 // 1번부터 N까지 순서대로 시계방향으로 돌아가며 동그랗게 앚게 함.
+	 // 1번부터 시계방향으로 돌아가며 1부터 시작해 번호 외침
+	 // 한왕자가 특정숫자K를 외치면 그 왕자는 제외됨. -> 원 밖으로 나옴.
+	 // 다음 왕자부터 다시 1부터 시작하여 본호를 외침.
+	 // 마지막 남은 왕자가 공주 구하러 감.
+
+	std::queue<int> peoples;
+	int curPerson = 1;
+	int curCount = 1;
+
+	for (int i = 1; i <= n; i++)
+	{
+		peoples.push(i);
+	}
+
+	while (peoples.size() > 1)
+	{
+		curPerson = peoples.front();
+		peoples.pop();
+
+		if (curCount != k)
+		{
+			peoples.push(curPerson);
+		}
+
+		curCount++;
+
+		if (curCount > k)
+			curCount = 1;
+	}
+
+	return peoples.front();
+}
+
+int main()
+{
+	int n = 8; // 사람 수
+	int k = 3; // 외치면 제외되는 숫자
+	std::cout << solution(n, k) << std::endl; // 결과: 7
+	return 0;
+}
+
 
 
 //////////////////////////////////////////////////////////////////
@@ -410,6 +602,43 @@ std::string solution(const std::string& need, const std::string& plan)
 int main()
 {
     std::string need = "CBA";
+    std::string plan = "CBDAGE";
+    std::cout << solution(need, plan) << std::endl; // 결과: YES
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <queue>
+#include <string>
+
+std::string solution(const std::string& need, const std::string& plan)
+{
+    std::queue<char> aa;
+
+    for (char e : need)
+    {
+        aa.push(e);
+    }
+
+    for (char e : plan)
+    {
+        if (aa.empty())
+            break;
+
+        if (e == aa.front())
+        {
+            aa.pop();
+        }
+    }
+
+    return aa.size() == 0 ? "YES" : "NO";
+}
+
+int main()
+{
+    std::string need = "CAB";
     std::string plan = "CBDAGE";
     std::cout << solution(need, plan) << std::endl; // 결과: YES
     return 0;
