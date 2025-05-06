@@ -1,0 +1,811 @@
+/////////////////////////////////////////////////////////////////////
+✅ 1. 선택정렬 (Selection Sort)
+
+#include <iostream>
+#include <vector>
+
+std::vector<int> solution(std::vector<int> arr)
+{
+    for (std::size_t i = 0; i < arr.size(); ++i)
+    {
+        std::size_t idx = i;
+        for (std::size_t j = i + 1; j < arr.size(); ++j)
+        {
+            if (arr[j] < arr[idx]) idx = j;
+        }
+        std::swap(arr[i], arr[idx]);
+    }
+    return arr;
+}
+
+int main()
+{
+    std::vector<int> arr = {13, 5, 11, 7, 23, 15};
+    std::vector<int> result = solution(arr);
+    for (int x : result) std::cout << x << " ";
+    return 0;
+}
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm> // for std::swap
+
+// 기준잡고 뒤에꺼 쭉보다가(끝까지) 최소값 -> 기준과 스왑
+std::vector<int> solution(std::vector<int> arr)
+{
+    // 오름차순 선택정렬
+    // 0부터 기준으로 순회하면서
+    // 자기 포함 뒤에꺼중에 최소값 고름
+    // 기준 잡은거랑 스왑.
+    // 기준 인덱스 하나 올려서 동일 시퀀스
+
+    for (std::size_t i = 0; i < arr.size() - 1; ++i)
+    {
+        std::size_t minIdx = i;
+
+        for (std::size_t j = i + 1; j < arr.size(); ++j)
+        {
+            if (arr[j] < arr[minIdx])
+            {
+                minIdx = j;
+            }
+        }
+
+        // 최소값이 달라졌다는 증거.
+        if (minIdx != i)
+        {
+            std::swap(arr[i], arr[minIdx]);
+        }
+    }
+
+    return arr;
+}
+
+int main()
+{
+    std::vector<int> arr = { 13, 5, 11, 7, 23, 15 };
+    std::vector<int> result = solution(arr);
+    for (int x : result) std::cout << x << " ";
+    return 0;
+}
+
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 2. 버블정렬 (Bubble Sort)
+
+#include <iostream>
+#include <vector>
+
+std::vector<int> solution(std::vector<int> arr)
+{
+    for (std::size_t i = 0; i < arr.size() - 1; ++i)
+    {
+        for (std::size_t j = 0; j < arr.size() - i - 1; ++j)
+        {
+            if (arr[j] > arr[j + 1])
+                std::swap(arr[j], arr[j + 1]);
+        }
+    }
+    return arr;
+}
+
+int main()
+{
+    std::vector<int> arr = {13, 5, 11, 7, 23, 15};
+    std::vector<int> result = solution(arr);
+    for (int x : result) std::cout << x << " ";
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+std::vector<int> solution(std::vector<int> arr)
+{
+    for (int i = 0; i < arr.size() - 1; i++)
+    {
+        for (int j = i + 1; j < arr.size(); j++)
+        {
+            if (arr[i] > arr[j])
+            {
+                std::swap(arr[i], arr[j]);
+            }
+        }
+    }
+
+    return arr;
+}
+
+int main()
+{
+    std::vector<int> arr = { 13, 5, 11, 7, 23, 15 };
+    std::vector<int> result = solution(arr);
+    for (int x : result) std::cout << x << " ";
+    return 0;
+}
+
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 3. Special Sort (음수는 앞쪽, 양수는 뒤쪽, 순서 유지 X)
+
+#include <iostream>
+#include <vector>
+
+/*
+    N개의 정수가 입력되면 당신은 입력된 값을 정렬해야 한다. 
+    음의 정수는  앞쪽에  양의정수는  뒷쪽에  있어야  한다.  
+    또한  양의정수와  음의정수의  순서에는 변함이 없어야 한다.
+*/
+std::vector<int> solution(std::vector<int> arr)
+{
+    std::vector<int> result;
+    for (int x : arr)
+        if (x < 0) result.push_back(x);
+    for (int x : arr)
+        if (x >= 0) result.push_back(x);
+    return result;
+}
+
+int main()
+{
+    std::vector<int> arr = {1, 2, 3, -3, -2, 5, 6, -6};
+    // -3 -2 -6 1 2 3 5 6
+    std::vector<int> result = solution(arr);
+    for (int x : result) std::cout << x << " ";
+    return 0;
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 4. 삽입정렬 (Insertion Sort)
+
+#include <iostream>
+#include <vector>
+
+std::vector<int> solution(std::vector<int> arr)
+{
+    for (std::size_t i = 1; i < arr.size(); ++i)
+    {
+        int tmp = arr[i], j;
+        for (j = i - 1; j >= 0 && arr[j] > tmp; --j)
+        {
+            arr[j + 1] = arr[j];
+        }
+        arr[j + 1] = tmp;
+    }
+    return arr;
+}
+
+int main()
+{
+    std::vector<int> arr = {11, 7, 5, 6, 10, 9};
+    std::vector<int> result = solution(arr);
+    for (int x : result) std::cout << x << " ";
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <vector>
+
+// 키를 잡고(두번쨰 인덱스)
+// 키의 왼쪽 이전인덱스 로 순회한다.
+// container 에 키 인덱스의 값을 넣고
+// 순회하는 값들과 비교한다
+// 키 인덱스에 있던 값은 container 에 옮겼으니
+// 이전 인덱스의 값들은 조건 만족시 이동시킬 수 있다.
+// 만족하는 빈칸에 container값을 삽입.
+
+// 키 인덱스 값 하나 잡고 
+// 이전것들 보면서 하나씩 뒤로 밀어
+// 만족하는 빈칸에 삽입.
+
+// ✅ std::size_t 사용	정수 오버플로 방지	특히 size 관련 루프에서 안전
+std::vector<int> solution(std::vector<int> arr)
+{
+    for (std::size_t i = 1; i < arr.size(); ++i)
+    {
+        int key = arr[i];         // 현재 삽입할 값
+        int j = static_cast<int>(i) - 1;
+
+        // 왼쪽 값들이 더 크면 한 칸씩 오른쪽으로 이동
+        // 이후의 칸들은 이미 정렬되어 있을 것임.
+        // 이 조건을 만족할때까지의 j 인덱스 값을 가져간다.
+        while (j >= 0 && arr[j] > key)
+        {
+            arr[j + 1] = arr[j];
+            --j;
+        }
+
+        // 딱한번만 삽입한다.
+        arr[j + 1] = key; // 올바른 위치에 삽입
+    }
+
+    return arr;
+}
+
+int main()
+{
+    std::vector<int> arr = { 11, 7, 5, 6, 10, 9 };
+    std::vector<int> result = solution(arr);
+    for (int x : result) std::cout << x << " ";
+    return 0;
+}
+
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 5. LRU (Least Recently Used - 캐시)
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+// 가장 오랫동안 참조되지 않은 페이지를 교체하는 기법
+// 캐시에서 작업을 제거할 때 가장 오랫동안 사용하지 않은 것을 제거하겠다는 알고리즘입니다
+
+/*
+    만약 캐시의 사이즈가 5이고 작업이  2 3 1 6 7 순으로 저장되어 있다면, 
+    (맨 앞이 가장 최근에 쓰인 작업이고, 맨 뒤는 가장 오랫동안 쓰이지 않은 작업이다.) 
+    
+    1) Cache Miss : 해야할 작업이 캐시에 없는 상태로 위 상태에서 만약 새로운 작업인 5번 작
+    업을 CPU가 사용한다면 Cache miss가 되고 모든 작업이 뒤로 밀리고 5번작업은 캐시의 맨
+    앞에 위치한다.  5 2 3 1 6 (7번 작업은 캐시에서 삭제된다.)
+
+    2) Cache Hit : 해야할 작업이 캐시에 있는 상태로 위 상태에서 만약 3번 작업을 CPU가 사용
+    한다면 Cache Hit가 되고, 63번 앞에 있는 5, 2번 작업은 한 칸 뒤로 밀리고, 3번이 맨 앞으
+    로 위치하게 된다.  5 2 3 1 6 ---> 3 5 2 1 6
+
+    캐시의 크기가 주어지고, 캐시가 비어있는 상태에서 N개의 작업을 CPU가 차례로 처리한다면
+    N개의 작업을 처리한 후 캐시메모리의 상태를 가장 최근 사용된 작업부터 차례대로 출력하는
+    프로그램을 작성하세요
+*/
+
+
+// LRU 알고리즘을 시뮬레이션하는 함수
+// size: 캐시 크기
+// arr: 작업 요청 순서
+std::vector<int> solution(int size, const std::vector<int>& arr)
+{
+    std::vector<int> cache(size, 0); // 초기 캐시는 0으로 채움
+
+    // 모든 작업 요청(x)에 대해 반복
+    for (int x : arr)
+    {
+        int pos = -1; // 캐시에 x가 있는지 위치 저장 (기본: 없음)
+
+        // 캐시에 x가 존재하는지 탐색
+        for (int i = 0; i < size; ++i)
+        {
+            if (cache[i] == x) pos = i; // 존재하면 위치 저장
+        }
+
+        // x가 캐시에 없을 경우 (cache miss)
+        if (pos == -1)
+        {
+            // 캐시를 오른쪽으로 한 칸씩 민다 (뒤에서 앞으로)
+            for (int i = size - 1; i >= 1; --i)
+                cache[i] = cache[i - 1];
+        }
+        else // x가 캐시에 이미 존재할 경우 (cache hit)
+        {
+            // pos 위치부터 1까지 오른쪽으로 이동 (중간 요소 shift)
+            for (int i = pos; i >= 1; --i)
+                cache[i] = cache[i - 1];
+        }
+
+        // 캐시 맨 앞에 x를 삽입 (최근에 사용된 값)
+        cache[0] = x;
+    }
+
+    return cache; // 최종 캐시 상태 반환
+}
+
+int main()
+{
+    int size = 5;
+    std::vector<int> arr = { 1, 2, 3, 2, 6, 2, 3, 5, 7 };
+    std::vector<int> result = solution(size, arr);
+    for (int x : result) std::cout << x << " ";
+    return 0;
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 6. 장난꾸러기 현수 (오름차순 정렬 위치가 다른 번호 찾기)
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+std::vector<int> solution(const std::vector<int>& arr)
+{
+    std::vector<int> tmp = arr;
+    std::sort(tmp.begin(), tmp.end());
+    std::vector<int> result;
+
+    // 정렬 한것과 안한것은 딱 2개만 이상할꺼니까.
+    for (std::size_t i = 0; i < arr.size(); ++i)
+    {
+        if (arr[i] != tmp[i]) result.push_back(i + 1);
+    }
+    return result;
+}
+
+int main()
+{
+    std::vector<int> arr = {120, 125, 152, 130, 135, 135, 143, 127, 160};
+    std::vector<int> result = solution(arr);
+    for (int x : result) std::cout << x << " ";
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+
+// 현수 반에 N명 학생
+// 반번호 정해주기위해 운동장에 반 학생들 키가 작은 학생부터 일렬로 세움.
+// 제일앞에 가장작은 학생부터 반번호를 1번부터N번까지 부여
+// 현수는 짝궁보다 키가 큼. -> 그런데 현수가 앞번호 받고싶어서 짝꿍과 자리바꿈.
+// 현수와 짝꿍이 자리를 바꾼 후 반 학생들의 일렬로 서있는 키 정보가 주어질때,
+// 현수가 받은 번호와 현수 짝꿍이 받은 번호를 차례로 출력하는 프로그램.
+
+// 다음것을 봤는데 나보다 작네?
+std::vector<int> solution(const std::vector<int>& arr)
+{
+	std::vector<int> errorArr;
+
+	for (int i = 0; i < arr.size() - 1; i++)
+	{
+		if (arr[i] > arr[i + 1])
+		{
+			if (errorArr.size() == 0)
+			{
+				errorArr.push_back(i + 1);
+				continue;
+			}
+
+			if (errorArr.size() == 1)
+				errorArr.push_back(i + 1 + 1);
+		}
+	}
+
+    return errorArr;
+}
+
+int main()
+{
+    std::vector<int> arr = { 120, 125, 152, 130, 135, 135, 143, 127, 160 };
+    std::vector<int> result = solution(arr);
+    for (int x : result) std::cout << x << " ";
+    return 0;
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 7. 좌표 정렬 (x 오름차순, x 같으면 y 오름차순)
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+std::vector<std::pair<int, int>> solution(std::vector<std::pair<int, int>> coords)
+{
+    std::sort(coords.begin(), coords.end());
+    return coords;
+}
+
+int main()
+{
+    std::vector<std::pair<int, int>> coords = {{2, 7}, {1, 3}, {1, 2}, {2, 5}, {3, 6}};
+    std::vector<std::pair<int, int>> result = solution(coords);
+    for (const auto& p : result)
+        std::cout << p.first << " " << p.second << std::endl;
+    return 0;
+}
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+std::vector<std::pair<int, int>> solution(std::vector<std::pair<int, int>> coords)
+{
+	std::sort(coords.begin(), coords.end()
+		, [](const std::pair<int, int> a, const std::pair<int, int> b)
+		{
+            if (a.first < b.first)
+                return true;
+            else if (a.first == b.first)
+            {
+                if (a.second < b.second)
+                    return true;
+            }
+            return false;
+        });
+
+    return coords;
+}
+
+int main()
+{
+    std::vector<std::pair<int, int>> coords = { {2, 7}, {1, 3}, {1, 2}, {2, 5}, {3, 6} };
+    std::vector<std::pair<int, int>> result = solution(coords);
+    for (const auto& p : result)
+        std::cout << p.first << " " << p.second << std::endl;
+    return 0;
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 8. 회의실 배정 (끝나는 시간 기준 오름차순, 최대 회의 수)
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+
+// 한개의 회의실이 있음
+// N개의 회의가 있음 -> 사용 표 만든대
+// 각 회의에 대해 시작시간과 끝 시간이 주어져있음.
+// 각 회의가 겹치지 않게 하면서 회의실을 사용 할 수 있는 최대 수 회의 찾아라
+
+// 회의 한번 시작하면 중단 안됨
+// 한 회의가 끝나면 바로 다음회의 시작 가능
+
+/*
+    ✅ 문제 접근 방식 (Greedy 전략)
+    🔍 왜 끝나는 시간 기준으로 정렬해야 할까?
+
+    회의가 겹치지 않아야 하며, 가능한 한 많은 회의를 선택하려면
+    가능한 빨리 끝나는 회의부터 선택해야, 그 다음 회의를 넣을 수 있는 "시간 여유"가 생깁니다.
+
+    즉, 회의를 길게 끌수록 다음 회의를 못 넣을 확률이 높아짐.
+
+    ✅ 왜 그리디에서 정렬이 중요할까?
+
+    그리디 알고리즘은 아래 두 조건을 만족하는 문제에 강력합니다:
+    앞에서 선택한 결정이 이후의 결과에 영향을 미친다.
+    국소적 최선 선택이 결국 전체 최적 해답으로 이어진다.
+    이 때, 무엇을 기준으로 선택할지를 정해야 하며, 그 기준을 정하기 위해 정렬이 반드시 필요한 경우가 많습니다.
+
+    ❗ 정렬이 꼭 필요한 이유
+    정렬은 탐욕 기준(우선순위)을 보장해줍니다.
+    정렬이 없다면 그리디는 무작위 선택이 되어 최적해 보장 불가입니다.
+
+    ✅ 정리
+    그리디는 '정렬'이 핵심 전략일 때가 매우 많습니다.
+    정렬 없이는 탐욕적인 선택을 제대로 할 수 없기 때문이죠.
+*/
+
+
+int solution(std::vector<std::pair<int, int>> meetings)
+{
+    std::sort(meetings.begin(), meetings.end(), [](auto a, auto b) {
+        return a.second < b.second;
+    });
+
+    int count = 0, end_time = 0;
+    for (const auto& m : meetings)
+    {
+        if (m.first >= end_time)
+        {
+            ++count;
+            end_time = m.second;
+        }
+    }
+    return count;
+}
+
+int main()
+{
+    std::vector<std::pair<int, int>> meetings = {{1, 4}, {2, 3}, {3, 5}, {4, 6}, {5, 7}};
+    std::cout << solution(meetings) << std::endl;
+    return 0;
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 9. 결혼식 (최대 동시에 존재하는 손님 수)
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+// 요소를 둘로 쪼개서
+// 온시간 간시간 따로 취합해놓고 -> 하나의 자료구조에
+// 취합 해놓은것을 돌려보면 -> 사람 들어오고, 빠지고
+// 최대로 많았던 인원수를 구하면 된다다
+int solution(std::vector<std::pair<int, int>> times)
+{
+    std::vector<std::pair<int, char>> events;
+    for (const auto& t : times)
+    {
+        events.push_back({t.first, 's'});
+        events.push_back({t.second, 'e'});
+    }
+
+    std::sort(events.begin(), events.end(), [](auto a, auto b) {
+        if (a.first == b.first) return a.second < b.second;
+        return a.first < b.first;
+    });
+
+    int max_count = 0, count = 0;
+    for (const auto& e : events)
+    {
+        if (e.second == 's') ++count;
+        else --count;
+        max_count = std::max(max_count, count);
+    }
+
+    return max_count;
+}
+
+int main()
+{
+    std::vector<std::pair<int, int>> guests = {{14, 18}, {12, 15}, {15, 20}, {20, 30}, {5, 14}};
+    std::cout << solution(guests) << std::endl;
+    return 0;
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 10. 이분검색 (Binary Search)
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int solution(int target, std::vector<int> arr)
+{
+    std::sort(arr.begin(), arr.end());
+    int lt = 0, rt = static_cast<int>(arr.size()) - 1;
+    while (lt <= rt)
+    {
+        int mid = (lt + rt) / 2;
+        if (arr[mid] == target)
+            return mid + 1;
+        else if (arr[mid] > target)
+            rt = mid - 1;
+        else
+            lt = mid + 1;
+    }
+    return -1;
+}
+
+int main()
+{
+    std::vector<int> arr = {23, 87, 65, 12, 57, 32, 99, 81};
+    int target = 32;
+    std::cout << solution(target, arr) << std::endl;
+    return 0;
+}
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int solution(int target, std::vector<int> arr)
+{
+    std::sort(arr.begin(), arr.end());
+
+    int left = 0; 
+    int right = arr.size() - 1;
+    int count = 0;
+
+    while (left <= right)
+    {
+        int mid = (left + right) / 2;
+
+        if (arr[mid] == target)
+        {
+            count = mid + 1;
+            break;
+        }
+        else if (arr[mid]>target)
+        {
+            right = mid - 1;
+        }
+        else
+        {
+            left = mid + 1;
+        }
+
+    }
+    return count;
+}
+
+int main()
+{
+    std::vector<int> arr = { 23, 87, 65, 12, 57, 32, 99, 81 };
+    int target = 32;
+    std::cout << solution(target, arr) << std::endl;
+    return 0;
+}
+
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 11. 뮤직비디오 (이분검색 + 용량 판별)
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+// 용량에 대해서 이분탐색을 하는것이다
+// dvd용량을 최대 크기부터 시작한다.
+
+
+// 주어진 용량(capacity)으로 m개의 DVD에 곡들을 나눠 담을 수 있는지 판단
+int count(const std::vector<int>& songs, int capacity)
+{
+    int cnt = 1;       // DVD 개수 (처음은 1개로 시작)
+    int sum = 0;       // 현재 DVD에 담긴 곡들의 총합
+
+    for (int x : songs)
+    {
+        // 현재 곡을 더했을 때 용량 초과하면 새로운 DVD 필요
+        if (sum + x > capacity)
+        {
+            cnt++;     // DVD 하나 추가
+            sum = x;   // 새 DVD에 현재 곡부터 시작
+        }
+        else
+        {
+            sum += x;  // 현재 DVD에 곡을 추가
+        }
+    }
+
+    return cnt; // 필요한 DVD 수 반환
+}
+
+
+// m개의 DVD에 모든 곡을 나눠 담기 위한 최소 용량을 이분 탐색으로 찾기
+int solution(int m, const std::vector<int>& songs)
+{
+    int answer = 0;
+
+    // 이분 탐색 범위 설정
+    // 가장 긴 곡의 길이가 최소 용량이 되어야 함 (한 곡도 쪼갤 수 없으므로)
+    int lt = *std::max_element(songs.begin(), songs.end());
+
+    // 모든 곡의 길이 총합이 최대 용량 (한 DVD에 전부 담는 경우)
+    int rt = 0;
+    for (int x : songs) rt += x;
+
+    // 이분 탐색 시작
+    while (lt <= rt)
+    {
+        int mid = (lt + rt) / 2; // 현재 테스트할 용량
+
+        // mid 용량으로 m개 이하 DVD에 나눠 담을 수 있다면
+        if (count(songs, mid) <= m)
+        {
+            answer = mid;  // 해당 용량 저장
+            rt = mid - 1;  // 더 작은 용량으로도 가능한지 왼쪽 탐색
+        }
+        else
+        {
+            lt = mid + 1;  // 더 큰 용량 필요 → 오른쪽 탐색
+        }
+    }
+
+    return answer; // 최종적으로 가능한 최소 용량 반환
+}
+
+
+int main()
+{
+    std::vector<int> songs = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int m = 3;
+    std::cout << solution(m, songs) << std::endl; // 결과: 17
+    return 0;
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+✅ 12. 마구간 정하기 (이분검색 + 거리 판별)
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+/*
+N개의 마구간이 수직선상에 있습니다. 
+각 마구간은 x1, x2, x3, ......, xN의 좌표를 가지며, 마
+구간간에 좌표가 중복되는 일은 없습니다.
+현수는 C마리의 말을 가지고 있는데, 이 말들은 서로 가까이 있는 것을 좋아하지 않습니다.
+각 마구간에는 한 마리의 말만 넣을 수 있고, 가장 가까운 두 말의 거리가 최대가 되게 말을
+마구간에 배치하고 싶습니다.
+C마리의 말을 N개의 마구간에 배치했을 때 가장 가까운 두 말의 거리가 최대가 되는 그 최대
+값을 출력하는 프로그램을 작성하세요
+
+*/
+
+
+// 마굿간 간격 최소 거리 dist 이상으로 말을 c마리 배치할 수 있는지
+int count(const std::vector<int>& stable, int dist)
+{
+    int cnt = 1;
+    int ep = stable[0]; // 첫 말 위치
+
+    for (std::size_t i = 1; i < stable.size(); ++i)
+    {
+        if (stable[i] - ep >= dist)
+        {
+            cnt++;
+            ep = stable[i];
+        }
+    }
+    return cnt;
+}
+
+// 말을 c마리 배치할 수 있는 최대 거리 구하기
+int solution(int c, std::vector<int> stable)
+{
+    int answer = 0;
+    std::sort(stable.begin(), stable.end());
+
+    int lt = 1;
+
+    // 가장 큰 거리 처음 - 끝
+    int rt = stable.back() - stable.front();
+
+    while (lt <= rt)
+    {
+        int mid = (lt + rt) / 2;
+        if (count(stable, mid) >= c)
+        {
+            answer = mid;
+            lt = mid + 1;
+        }
+        else
+        {
+            rt = mid - 1;
+        }
+    }
+    return answer;
+}
+
+int main()
+{
+    std::vector<int> stable = { 1, 2, 8, 4, 9 };
+    int c = 3;
+    std::cout << solution(c, stable) << std::endl; // 결과: 3
+    return 0;
+}
