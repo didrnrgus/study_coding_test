@@ -1,0 +1,353 @@
+///////////////////////////////////////////////////////////////////////////////
+✅ 1. 경로탐색 (DFS)
+
+// 체크1 방향성이니까 갈수 있냐
+// 체크2 갔던곳이냐?
+// 배열 두개 필요? -> 경로 배열 2차원, 체크 1차원원
+#include <iostream>
+#include <vector>
+
+int solution(int n, const std::vector<std::pair<int, int>>& arr) {
+    int answer = 0;
+    std::vector<std::vector<int>> graph(n + 1, std::vector<int>(n + 1, 0));
+
+    // 0번 인덱스부터 사용할 것이기 때문에.
+    std::vector<int> ch(n + 1, 0);
+    std::vector<int> path;
+
+    for (const auto& p : arr) {
+        graph[p.first][p.second] = 1;
+    }
+
+    std::function<void(int)> DFS = [&](int v) {
+        if (v == n) {
+            answer++;
+        } else {
+            for (int i = 1; i <= n; ++i) {
+                if (graph[v][i] == 1 && ch[i] == 0) {
+                    ch[i] = 1;
+                    path.push_back(i);
+                    DFS(i);
+                    ch[i] = 0;
+                    path.pop_back();
+                }
+            }
+        }
+    };
+
+    ch[1] = 1;
+    path.push_back(1);
+    DFS(1);
+
+    return answer;
+}
+
+int main() {
+    std::vector<std::pair<int, int>> arr = {
+        {1, 2}, {1, 3}, {1, 4}, {2, 1}, {2, 3}, {2, 5},
+        {3, 4}, {4, 2}, {4, 5}
+    };
+    std::cout << solution(5, arr) << std::endl;
+    return 0;
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+✅ 2. 경로탐색 (인접리스트)
+
+
+#include <iostream>
+#include <vector>
+
+int solution(int n, const std::vector<std::pair<int, int>>& arr) {
+    int answer = 0;
+    std::vector<std::vector<int>> graph(n + 1);
+    std::vector<int> ch(n + 1, 0);
+    std::vector<int> path;
+
+    for (const auto& p : arr) {
+        graph[p.first].push_back(p.second);
+    }
+
+    std::function<void(int)> DFS = [&](int v) {
+        if (v == n) {
+            answer++;
+        } else {
+            for (int nv : graph[v]) {
+                if (ch[nv] == 0) {
+                    ch[nv] = 1;
+                    path.push_back(nv);
+                    DFS(nv);
+                    ch[nv] = 0;
+                    path.pop_back();
+                }
+            }
+        }
+    };
+
+    ch[1] = 1;
+    path.push_back(1);
+    DFS(1);
+
+    return answer;
+}
+
+int main() {
+    std::vector<std::pair<int, int>> arr = {
+        {1, 2}, {1, 3}, {1, 4}, {2, 1}, {2, 3}, {2, 5},
+        {3, 4}, {4, 2}, {4, 5}
+    };
+    std::cout << solution(5, arr) << std::endl;
+    return 0;
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+✅ 3. 미로탐색 (DFS)
+
+
+#include <iostream>
+#include <vector>
+
+int solution(std::vector<std::vector<int>> board) {
+    int answer = 0;
+    int dx[4] = {-1, 0, 1, 0};
+    int dy[4] = {0, 1, 0, -1};
+
+    std::function<void(int, int)> DFS = [&](int x, int y) {
+        if (x == 6 && y == 6) {
+            answer++;
+        } else {
+            for (int k = 0; k < 4; ++k) {
+                int nx = x + dx[k];
+                int ny = y + dy[k];
+                if (nx >= 0 && nx <= 6 && ny >= 0 && ny <= 6 && board[nx][ny] == 0) {
+                    board[nx][ny] = 1;
+                    DFS(nx, ny);
+                    board[nx][ny] = 0;
+                }
+            }
+        }
+    };
+
+    board[0][0] = 1;
+    DFS(0, 0);
+    return answer;
+}
+
+int main() {
+    std::vector<std::vector<int>> arr = {
+        {0,0,0,0,0,0,0},
+        {0,1,1,1,1,1,0},
+        {0,0,0,1,0,0,0},
+        {1,1,0,1,0,1,1},
+        {1,1,0,0,0,0,1},
+        {1,1,0,1,1,0,0},
+        {1,0,0,0,0,0,0}
+    };
+    std::cout << solution(arr) << std::endl;
+    return 0;
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+✅ 4. 이진트리 넓이우선탐색 (BFS)
+
+
+#include <iostream>
+#include <queue>
+#include <string>
+
+std::string solution() {
+    std::string answer;
+    std::queue<int> q;
+    q.push(1);
+
+    while (!q.empty()) {
+        int v = q.front();
+        q.pop();
+        answer += std::to_string(v) + " ";
+
+        for (int nv : {v * 2, v * 2 + 1}) {
+            if (nv > 7) continue;
+            q.push(nv);
+        }
+    }
+
+    return answer;
+}
+
+int main() {
+    std::cout << solution() << std::endl;
+    return 0;
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+✅ 5. 송아지 찾기 (BFS)
+
+// 트리가 만들어져야 한다.
+// 시작은 5였으니까
+// 재로 -1, 1, 5 가지고 트리를 만들어보자
+// 5 -> 4 6 10 이렇게 목적지까지.
+
+// 왔던자리를 체크안하면, 무한루프에 빠질 수 있을듯?
+
+#include <iostream>
+#include <queue>
+#include <vector>
+
+int solution(int s, int e) {
+    std::vector<int> ch(10001, 0); // 인덱스와 실제거리 안헷갈리게 하려고.
+    std::vector<int> dis(10001, 0);
+    std::queue<int> q;
+
+    q.push(s);
+    ch[s] = 1;
+
+    while (!q.empty()) {
+        int x = q.front();
+        q.pop();
+
+        for (int nx : {x - 1, x + 1, x + 5}) {
+            if (nx == e) return dis[x] + 1;
+            if (nx > 0 && nx <= 10000 && ch[nx] == 0) {
+                ch[nx] = 1;
+                q.push(nx);
+                dis[nx] = dis[x] + 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+int main() {
+    std::cout << solution(5, 14) << std::endl;
+    return 0;
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+✅ 6. 섬나라 아일랜드 (BFS)
+
+// 큐에 넣을때 있던자리 체크를 표시 해 준다.
+ 
+#include <iostream>
+#include <vector>
+#include <queue>
+
+int solution(std::vector<std::vector<int>> board) {
+    int answer = 0;
+    int n = board.size();
+    int dx[8] = {-1,-1,0,1,1,1,0,-1};
+    int dy[8] = {0,1,1,1,0,-1,-1,-1};
+    std::queue<std::pair<int, int>> q;
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (board[i][j] == 1) {
+                board[i][j] = 0;
+                q.push({i, j});
+                answer++;
+
+                while (!q.empty()) {
+                    auto [x, y] = q.front(); q.pop();
+                    for (int k = 0; k < 8; ++k) {
+                        int nx = x + dx[k];
+                        int ny = y + dy[k];
+                        if (nx >= 0 && nx < n && ny >= 0 && ny < n && board[nx][ny] == 1) {
+                            board[nx][ny] = 0;
+                            q.push({nx, ny});
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return answer;
+}
+
+int main() {
+    std::vector<std::vector<int>> arr = {
+        {1,1,0,0,0,1,0},
+        {0,1,1,0,1,1,0},
+        {0,1,0,0,0,0,0},
+        {0,0,0,1,0,1,1},
+        {1,1,0,1,1,0,0},
+        {1,0,0,0,1,0,0},
+        {1,0,1,0,1,0,0}
+    };
+    std::cout << solution(arr) << std::endl;
+    return 0;
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+✅ 7. 섬나라 아일랜드 (DFS)
+
+
+#include <iostream>
+#include <vector>
+
+int solution(std::vector<std::vector<int>> board) {
+    int answer = 0;
+    int n = board.size();
+    int dx[8] = {-1,-1,0,1,1,1,0,-1};
+    int dy[8] = {0,1,1,1,0,-1,-1,-1};
+
+    std::function<void(int, int)> DFS = [&](int x, int y) {
+        board[x][y] = 0;
+        for (int k = 0; k < 8; ++k) {
+            int nx = x + dx[k];
+            int ny = y + dy[k];
+            if (nx >= 0 && nx < n && ny >= 0 && ny < n && board[nx][ny] == 1) {
+                DFS(nx, ny);
+            }
+        }
+    };
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (board[i][j] == 1) {
+                answer++;
+                DFS(i, j);
+            }
+        }
+    }
+
+    return answer;
+}
+
+int main() {
+    std::vector<std::vector<int>> arr = {
+        {1,1,0,0,0,1,0},
+        {0,1,1,0,1,1,0},
+        {0,1,0,0,0,0,0},
+        {0,0,0,1,0,1,1},
+        {1,1,0,1,1,0,0},
+        {1,0,0,0,1,0,0},
+        {1,0,1,0,1,0,0}
+    };
+    std::cout << solution(arr) << std::endl;
+    return 0;
+}

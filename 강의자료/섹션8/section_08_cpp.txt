@@ -99,6 +99,12 @@ int main()
 ///////////////////////////////////////////////////////////
 ✅ 4. 부분집합 구하기
 
+// 부분집합은 2^n -> 문제에서는 2^3 -> 8
+// 참여 한다 안한다 경우
+// 레벨0 1개 1이 참여 한다, 안한다
+// 레벨2 2개 2
+// 레벨3 4개 3
+// 레벨4 말단부분 정리
 #include <iostream>
 #include <vector>
 #include <string>
@@ -161,6 +167,13 @@ int main()
     // 굳이 여러번 부분집합 구해서 중복 안구해도
     // 한번에 될 수 있는 방법임.
 */
+
+// 선택하고 선택안하고의 배열 1케이스가 생기잖아
+// -> 1케이스의 모든합
+// -> 전체 합 - 1케이스 모든합 == 1케이스 모든합
+// -> 해당 케이스가 조건에 맞는 케이스라는거지
+
+// 레벨을 입력 배열의 인덱스로 사용했다.
 #include <iostream>
 #include <vector>
 #include <numeric> // std::accumulate
@@ -267,6 +280,12 @@ int main()
 
 ///////////////////////////////////////////////////////////
 ✅ 6. 바둑이 승차
+
+// 바둑이 쭉 보면서 케이스별로 태운다 태우지 않는다
+// 결국 부분집합 문제임.
+// 레벨로 더 들어갈수록 다음 바둑이 보고
+// 바둑이 마릿수보다 1더 들어가서 말단 정리
+// 레벨 들어가다가 최대 조건 넘어가면 그건 탈락임. -> 말단 정리
 
 #include <iostream>
 #include <vector>
@@ -504,6 +523,9 @@ int main()
 
 ///////////////////////////////////////////////////////////
 ✅ 10. 순열 구하기
+// 여기서부터 좀 어려웠던듯?
+// 이건 중복이 안된다.
+// 그래서 체크를 하는겨
 
 #include <iostream>
 #include <vector>
@@ -594,19 +616,49 @@ int main()
 
 ///////////////////////////////////////////////////////////
 ✅ 12. 조합수 (메모이제이션)
+// 0! (팩토리얼) -> 1
+// nC1   -> n
+// nCn-1 -> n
+// nC1 = nCn-1
+// nCr = n-1Cr-1 + n-1Cr   -> 이걸 재귀이용해서
+// 조합의 기본 성질: nC0 = 1, nCn = 1
+// 조합 점화식: nCr = (n-1)C(r-1) + (n-1)Cr
+
+// n == r -> 1
+// r == 0 -> 1
+// n-r == 1 -> n
+
+// 5C3 의 경우 두부류로 나눌수 있음.
+// -> nCr = n-1Cr-1 + n-1Cr
+
+// 5가 들어가는 경우와, 5가 들어가지 않는 경우
+
+// 5가 들어가는 경우 -> 4C2
+// -> 1~4 중에 2개를 뽑고 나머지 자리에 5를 넣으면 됨.
+
+// 5가 들어가지 않는 경우 -> 4C3
+// -> 1~4 중에 3개를 뽑으면 됨.
 
 #include <iostream>
 #include <vector>
 
+// 메모이제이션을 위한 2차원 배열 (최대 34C34까지 저장 가능)
 int dy[35][35] = {0};
 
+// DFS + 메모이제이션으로 조합(nCr)을 계산하는 함수
 int DFS(int n, int r)
 {
+    // 이미 계산된 값이 있으면 재사용 (메모이제이션)
     if (dy[n][r] > 0) return dy[n][r];
+
+    // 조합의 기본 성질: nC0 = 1, nCn = 1
     if (n == r || r == 0) return 1;
+
+    // 조합 점화식: nCr = (n-1)C(r-1) + (n-1)Cr
     return dy[n][r] = DFS(n - 1, r - 1) + DFS(n - 1, r);
 }
 
+// 조합 계산 함수 (외부 인터페이스용)
 int solution(int n, int r)
 {
     return DFS(n, r);
@@ -614,6 +666,7 @@ int solution(int n, int r)
 
 int main()
 {
+    // 예시: 5C3 계산 → 출력: 10
     std::cout << solution(5, 3) << std::endl;
     return 0;
 }
@@ -628,60 +681,138 @@ int main()
 #include <iostream>
 #include <vector>
 
-int dy[11][11] = {0};
-int ch[11] = {0};
-int p[11], b[11];
-int n, f;
-bool flag = false;
+// ======================================
+// 조합 계산을 위한 메모이제이션 테이블
+// combinations[n][r] = nCr
+// (최대 n = 10까지 지원, 인덱스 0~10)
+// ======================================
+int combinations[11][11] = { 0 };
+
+// ======================================
+// 숫자 사용 여부 체크 배열
+// isUsed[i] = true면 숫자 i는 현재 순열에 포함됨
+// 중복 없이 1~n까지의 숫자를 한 번씩 사용하기 위해 필요
+// ======================================
+bool isUsed[11] = { false };
+
+// ======================================
+// 현재까지 만들어진 순열을 저장하는 배열
+// currentPermutation[i] = i번째 자리에 배치된 숫자
+// ======================================
+int currentPermutation[11];
+
+// ======================================
+// 각 자리마다 곱해질 조합 계수 (고정 가중치)
+// combinationCoefficients[i] = n-1Ci
+// 예: n = 4일 경우 → [1, 3, 3, 1]
+// ======================================
+int combinationCoefficients[11];
+
+// ======================================
+// 입력으로 주어진 값
+// totalCount: 사용할 숫자의 총 개수 (1부터 totalCount까지)
+// targetSum: 조합 계수를 곱한 합이 되어야 하는 목표값
+// ======================================
+int totalCount, targetSum;
+
+// ======================================
+// 정답 순열을 한 번 찾으면 더 이상 탐색하지 않기 위한 플래그
+// ======================================
+bool hasAnswer = false;
+
+// ======================================
+// 정답 순열을 저장할 벡터
+// ======================================
 std::vector<int> answer;
 
-int combi(int n, int r)
+// ======================================
+// 조합 계산 함수 with memoization
+// nCr = (n-1)C(r-1) + (n-1)Cr
+// 조합을 반복 계산하지 않기 위해 결과를 캐싱
+// ======================================
+int GetCombination(int n, int r)
 {
-    if (dy[n][r] > 0) return dy[n][r];
+    // 이미 계산된 값이면 반환
+    if (combinations[n][r] > 0) return combinations[n][r];
+
+    // 기본 조합 공식: nCn = 1, nC0 = 1
     if (n == r || r == 0) return 1;
-    return dy[n][r] = combi(n - 1, r - 1) + combi(n - 1, r);
+
+    // 점화식 적용 + 메모이제이션 저장
+    return combinations[n][r] = GetCombination(n - 1, r - 1) + GetCombination(n - 1, r);
 }
 
-void DFS(int L, int sum)
+// ======================================
+// 순열을 생성하며, 각 순열에 대해 조합계수 × 숫자 누적합을 계산
+// 누적합이 targetSum이 되면 정답 저장
+// ======================================
+void SearchPermutation(int level, int accumulatedSum)
 {
-    if (flag) return;
-    if (L == n && sum == f)
+    // 정답이 이미 한 번 구해졌다면 중단
+    if (hasAnswer) return;
+
+    // 모든 자리 수를 채우고, 누적합이 목표값과 같다면 정답으로 인정
+    if (level == totalCount && accumulatedSum == targetSum)
     {
-        flag = true;
-        for (int i = 0; i < n; ++i) answer.push_back(p[i]);
+        hasAnswer = true;
+        for (int i = 0; i < totalCount; ++i)
+            answer.push_back(currentPermutation[i]);
     }
     else
     {
-        for (int i = 1; i <= n; ++i)
+        // 1부터 n까지의 숫자를 사용하여 순열 생성
+        for (int num = 1; num <= totalCount; ++num)
         {
-            if (ch[i] == 0)
+            if (!isUsed[num]) // 중복 방지
             {
-                ch[i] = 1;
-                p[L] = i;
-                DFS(L + 1, sum + (b[L] * p[L]));
-                ch[i] = 0;
+                isUsed[num] = true;                   // 사용 표시
+                currentPermutation[level] = num;      // 현재 순열에 배치
+
+                // 조합 계수 × 숫자를 누적합에 더하여 다음 자리 탐색
+                SearchPermutation(level + 1, accumulatedSum + (combinationCoefficients[level] * num));
+
+                isUsed[num] = false; // 백트래킹 (사용 해제)
             }
         }
     }
 }
 
-std::vector<int> solution(int _n, int _f)
+// ======================================
+// 외부에서 사용하는 문제 해결 함수
+// totalCount: n, targetSum: f
+// 1~n까지 숫자 중 하나의 순열을 골라서,
+// 조합계수 × 숫자 누적합이 targetSum이 되는 경우를 찾음
+// ======================================
+std::vector<int> FindSpecialPermutation(int n, int f)
 {
-    n = _n;
-    f = _f;
-    for (int i = 0; i < n; ++i)
-        b[i] = combi(n - 1, i);
-    DFS(0, 0);
+    totalCount = n;
+    targetSum = f;
+
+    // 각 자리의 조합 계수 (n-1Ci) 미리 계산
+    // 예: n = 4일 경우 → (3C0, 3C1, 3C2, 3C3) → 1 3 3 1
+    for (int i = 0; i < totalCount; ++i)
+        combinationCoefficients[i] = GetCombination(totalCount - 1, i);
+
+    // DFS로 순열 탐색 시작
+    SearchPermutation(0, 0);
+
     return answer;
 }
 
 int main()
 {
-    std::vector<int> res = solution(4, 16);
-    for (int x : res) std::cout << x << " ";
+    // 예시: n = 4, f = 16일 때 정답은 3 1 2 4
+    std::vector<int> result = FindSpecialPermutation(4, 16);
+
+    // 정답 출력
+    for (int x : result)
+        std::cout << x << " ";
     std::cout << std::endl;
+
     return 0;
 }
+
+
 
 
 
@@ -690,9 +821,20 @@ int main()
 ///////////////////////////////////////////////////////////
 ✅ 14. 조합 구하기
 
+// 조합 4C2
+// 이전에 순서상관 없고 -> 없었던 케이스를 뽑아야 함.
+// 1 -> 2 3 4
+// 2 -> 3 4
+// 3 -> 4
+// 4 -> 이미 다 함.
+
+// 레벨을 요소로 쓰던 말던 상관없지만
+// 해당문제에서는 레벨을 기준 요소로 씀.
+
 #include <iostream>
 #include <vector>
 
+// s 는 스타팅 넘버
 void DFS(int L, int s, int n, int m, std::vector<int>& tmp, std::vector<std::vector<int>>& answer)
 {
     if (L == m)
@@ -704,6 +846,9 @@ void DFS(int L, int s, int n, int m, std::vector<int>& tmp, std::vector<std::vec
         for (int i = s; i <= n; ++i)
         {
             tmp[L] = i;
+
+            // 스타트 넘버가 증가하니까 다음레벨은 순회할게 1 적어짐.
+            // 순열이라 이전에 가진거 또 가지면 안된다.
             DFS(L + 1, i + 1, n, m, tmp, answer);
         }
     }
@@ -741,6 +886,7 @@ int main()
 
 int answer = 0;
 
+// 스타트넘버를 세팅하는것만으로도 이전에 선택했던 것을 스킵할 수 있다.
 void DFS(int L, int s, int sum, int k, int m, const std::vector<int>& arr)
 {
     if (L == k)
