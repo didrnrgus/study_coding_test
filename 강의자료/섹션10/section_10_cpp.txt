@@ -1,0 +1,230 @@
+동적 계획법 (Dynamic Programming)
+문제를 전체적으로 보면 어려운데
+작은 단위로 직관적으로 알 수 있는 아주 작은 단위의 문제로 생각 해 봄.
+
+작은 단위의 문제가 나오면 일단 답을 기록.
+문제의 범위를 넓힘
+점화식 의 관계를 찾아라
+
+
+////////////////////////////////////////////////////////////////////
+✅ 1. 계단오르기
+
+// 1 일떄? 1가지
+// 2 일때? 2가지 1 + 2
+// 3 일때? 1번계단에서 왔거나, 2번계단에서 왔거나
+// 다이나믹 프로그래밍은 dy 테이블이 꼭 필요함. 
+// -> 테이블 크기는 N+1까지 -> 인덱스때매 헷갈림.
+// 7 번째 까지 가는 방법의 수
+// 해놓은것을 이용해라 
+// -> 1,2를 이용해서 3을 구하고
+// -> 2,3을 이용해서 4를 구하고
+// -> 3,4를 이용해서 5를 구한다.
+
+
+#include <iostream>
+#include <vector>
+
+int solution(int n) 
+{
+    std::vector<int> dy(n + 1, 0);
+
+    // 힌트 최대로 이용해라.
+    dy[1] = 1;
+    dy[2] = 2;
+
+    for (int i = 3; i <= n; ++i) 
+    {
+        dy[i] = dy[i - 1] + dy[i - 2];
+    }
+
+    return dy[n];
+}
+
+int main() 
+{
+    std::cout << solution(7) << std::endl;
+    return 0;
+}
+
+
+
+
+
+////////////////////////////////////////////////////////////////////
+✅ 2. 돌다리 건너기
+
+
+#include <iostream>
+#include <vector>
+
+int solution(int n) 
+{
+    std::vector<int> dy(n + 2, 0);
+    dy[1] = 1;
+    dy[2] = 2;
+
+    for (int i = 3; i <= n + 1; ++i) 
+    {
+        dy[i] = dy[i - 1] + dy[i - 2];
+    }
+
+    return dy[n + 1];
+}
+
+int main() 
+{
+    std::cout << solution(7) << std::endl;
+    return 0;
+}
+
+
+
+
+
+////////////////////////////////////////////////////////////////////
+✅ 3. 최대 부분 증가 수열 (LIS)
+
+// dy 테이블 의 의미를 알아야 함.
+// 마지막 증가수열의 마지막 숫자.
+// 최대 길이의 값.
+
+// arr 순회 하면서 인덱스 1부터 시작
+// 자기 앞에꺼 보고 -> 나보다 작네?(arr) -> 쟤는 수열길이가 몇인가(dy)
+
+// 역시 다이나믹 테이블을 구해야 함.
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int solution(const std::vector<int>& arr) 
+{
+    int n = arr.size();
+    std::vector<int> dy(n, 1);
+    int answer = 1;
+
+    for (int i = 1; i < n; ++i) 
+    {
+        int maxVal = 0;
+        for (int j = 0; j < i; ++j) 
+        {
+            if (arr[j] < arr[i] && dy[j] > maxVal) 
+            {
+                maxVal = dy[j];
+            }
+        }
+        dy[i] = maxVal + 1;
+        answer = std::max(answer, dy[i]);
+    }
+
+    return answer;
+}
+
+int main() 
+{
+    std::vector<int> arr = 
+    {5, 3, 7, 8, 6, 2, 9, 4};
+    std::cout << solution(arr) << std::endl;
+    return 0;
+}
+
+
+
+
+
+////////////////////////////////////////////////////////////////////
+✅ 4. 동전 교환 냅색 알고리즘
+
+// dy 길이는 15+1로 주었음. 인덱스 번호로 나오게끔.
+// dy[i] 의 값의 의미를 알아야 함 -> 알기 어려움..
+// i 금액을 거슬러 주는데 사용된 최소 동전갯수.
+// 아하 -> 15 까지 가기위해 이전 얘들의 정보가 필요?
+
+// 일단 1원짜리 하나만으로 거슬러줄 수 이있는 동전 갯수.
+// dy 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+// 15원 이니까 현재상태는 15개
+
+// 2원짜리는 2부터 순회돈다
+// dy 1 1(바꿈) 3 4 5 6 ...
+// 이제 1원인덱스 2원인덱스를 보고 3원 인덱스를 구해봐
+// dy 1 1 2(1과 2를 보고 2원이니까 3원은 1+2 그래서 2개)
+// dy 1 1 2 2 3(5원) 3(6원) ... 지금 앞에 2개보고 가는거다
+// dy 1 1 2 2 3 3 4 4 5 5 6 6(12원) 7 7 8(15원)
+
+// 5원짜리는 5원부터 순회돈다
+// dy 1 1 2 2 1(5원) 2 2 3 3(9원:5,1,2) .. 앞에 1,2,5 번쨰 뒤에 보고 구함(최소)
+// dy 1 1 2 2 1(5원) 2 2 3 3 2(10원) 3 3 4 4 3(15원: 1,2->5/5->3)
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int solution(int m, const std::vector<int>& coin) 
+{
+    std::vector<int> dy(m + 1, 1000);
+    dy[0] = 0;
+
+    for (int i = 0; i < coin.size(); ++i) 
+    {
+        for (int j = coin[i]; j <= m; ++j) 
+        {
+            dy[j] = std::min(dy[j], dy[j - coin[i]] + 1);
+        }
+    }
+
+    return dy[m];
+}
+
+int main() 
+{
+    std::vector<int> arr = 
+    {1, 2, 5};
+    std::cout << solution(15, arr) << std::endl;
+    return 0;
+}
+
+
+
+
+
+////////////////////////////////////////////////////////////////////
+✅ 5. 최대 점수 구하기 (냅색 문제)
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int solution(int m, const std::vector<std::pair<int, int>>& arr) 
+{
+    std::vector<int> dy(m + 1, 0);
+
+    for (const auto& p : arr) 
+    {
+        int ps = p.first;
+        int pt = p.second;
+        for (int j = m; j >= pt; --j) 
+        {
+            dy[j] = std::max(dy[j], dy[j - pt] + ps);
+        }
+    }
+
+    return dy[m];
+}
+
+int main() 
+{
+    std::vector<std::pair<int, int>> arr = 
+    {
+        
+        {10, 5}, 
+        {25, 12}, 
+        {15, 8}, 
+        {6, 3}, 
+        {7, 4}
+    };
+    std::cout << solution(20, arr) << std::endl;
+    return 0;
+}
