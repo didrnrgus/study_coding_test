@@ -241,7 +241,8 @@ int solution(int m, const std::vector<int>& arr)
         {
             resultCount++;
         }
-
+        
+        // 오버됐을떄 하는구나
         while (sum > m)
         {
             sum -= arr[idxLeft];
@@ -321,10 +322,10 @@ int solution(int m, const std::vector<int>& arr)
     int sum = 0;
     int resultCount = 0;
 
-    for (int il = 0, ir = 0;;il++)
+    for (int lt = 0, rt = 0;;rt++)
     {
-        sum = arr[il];
-        ir = il;
+        sum = arr[rt];
+        lt = rt;
 
         if (sum <= m)
         {
@@ -335,12 +336,12 @@ int solution(int m, const std::vector<int>& arr)
             continue;
         }
 
-        if (il == arr.size() - 1)
+        if (rt == arr.size() - 1)
             break;
 
-		while (sum <= m && ir < arr.size() - 1)
+		while (sum <= m && lt < arr.size() - 1)
 		{
-            sum += arr[++ir];
+            sum += arr[++lt];
 
             if (sum <= m)
             {
