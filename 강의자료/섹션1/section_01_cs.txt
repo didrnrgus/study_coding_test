@@ -1,0 +1,469 @@
+✅ 1. 세 수 중 최솟값
+
+using System;
+
+class Program
+{
+    static int Solution(int a, int b, int c)
+    {
+        int answer = (a < b) ? a : b;
+        if (c < answer) answer = c;
+        return answer;
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution(2, 5, 1));
+    }
+}
+
+
+
+
+
+
+✅ 2. 삼각형 판별하기
+
+using System;
+
+class Program
+{
+    static string Solution(int a, int b, int c)
+    {
+        int max = Math.Max(a, Math.Max(b, c));
+        int sum = a + b + c;
+        return (sum - max > max) ? "YES" : "NO";
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution(13, 33, 17));
+    }
+}
+
+
+
+
+
+
+✅ 3. 연필개수
+
+using System;
+
+class Program
+{
+    static int Solution(int n)
+    {
+        return (n + 11) / 12;
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution(178));
+    }
+}
+
+
+
+
+
+
+✅ 4. 1부터 N까지의 합
+
+using System;
+
+class Program
+{
+    static int Solution(int n)
+    {
+        return (1 + n) * n / 2;
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution(10));
+    }
+}
+
+
+
+
+
+
+✅ 5. 최솟값 구하기
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(List<int> arr)
+    {
+        int minVal = int.MaxValue;
+        foreach (int x in arr)
+        {
+            if (x < minVal)
+                minVal = x;
+        }
+        return minVal;
+    }
+
+    static void Main()
+    {
+        var arr = new List<int> { 5, 7, 1, 3, 2, 9, 11 };
+        Console.WriteLine(Solution(arr));
+    }
+}
+
+
+
+
+
+
+✅ 6. 홀수
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static (int sum, int min) Solution(List<int> arr)
+    {
+        int sum = 0;
+        int min = int.MaxValue;
+
+        foreach (int x in arr)
+        {
+            if (x % 2 == 1)
+            {
+                sum += x;
+                if (x < min) min = x;
+            }
+        }
+
+        return (sum, min);
+    }
+
+    static void Main()
+    {
+        var arr = new List<int> { 12, 77, 38, 41, 53, 92, 85 };
+        var result = Solution(arr);
+        Console.WriteLine(result.sum);
+        Console.WriteLine(result.min);
+    }
+}
+
+
+
+
+
+
+✅ 7. 10부제
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(int day, List<int> arr)
+    {
+        int count = 0;
+        foreach (int num in arr)
+        {
+            if (num % 10 == day)
+                count++;
+        }
+        return count;
+    }
+
+    static void Main()
+    {
+        var arr = new List<int> { 25, 23, 11, 47, 53, 17, 33 };
+        Console.WriteLine(Solution(3, arr));
+    }
+}
+
+
+
+
+
+
+✅ 8. 일곱 난쟁이
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static List<int> Solution(List<int> arr)
+    {
+        int sum = arr.Sum();
+
+        for (int i = 0; i < arr.Count; i++)
+        {
+            for (int j = i + 1; j < arr.Count; j++)
+            {
+                if (sum - arr[i] - arr[j] == 100)
+                {
+                    arr.RemoveAt(j);
+                    arr.RemoveAt(i);
+                    return arr;
+                }
+            }
+        }
+
+        return arr;
+    }
+
+    static void Main()
+    {
+        var arr = new List<int> { 20, 7, 23, 19, 10, 15, 25, 8, 13 };
+        var result = Solution(arr);
+        Console.WriteLine(string.Join(" ", result));
+    }
+}
+
+
+
+
+
+
+✅ 9. A를 #으로
+
+using System;
+
+class Program
+{
+    static string Solution(string s)
+    {
+        return s.Replace('A', '#');
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution("BANANA"));
+    }
+}
+
+
+
+
+
+
+✅ 10. 문자 찾기
+
+using System;
+
+class Program
+{
+    static int Solution(string s, char t)
+    {
+        int count = 0;
+        foreach (char c in s)
+        {
+            if (c == t) count++;
+        }
+        return count;
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution("COMPUTERPROGRAMMING", 'R'));
+    }
+}
+
+
+
+
+
+
+✅ 11. 대문자 찾기
+
+using System;
+
+class Program
+{
+    static int Solution(string s)
+    {
+        int count = 0;
+        foreach (char c in s)
+        {
+            if (char.IsUpper(c)) count++;
+        }
+        return count;
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution("KoreaTimeGood"));
+    }
+}
+
+
+
+
+
+
+✅ 12. 대문자로 통일
+
+using System;
+
+class Program
+{
+    static string Solution(string s)
+    {
+        return s.ToUpper();
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution("ItisTimeToStudy"));
+    }
+}
+
+
+
+
+
+
+✅ 13. 대소문자 변환
+
+using System;
+
+class Program
+{
+    static string Solution(string s)
+    {
+        string result = "";
+        foreach (char c in s)
+        {
+            result += char.IsUpper(c) ? char.ToLower(c) : char.ToUpper(c);
+        }
+        return result;
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution("StuDY"));
+    }
+}
+
+
+
+
+
+
+✅ 14. 가장 긴 문자열
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static string Solution(List<string> s)
+    {
+        string answer = "";
+        int maxLen = 0;
+        foreach (string str in s)
+        {
+            if (str.Length > maxLen)
+            {
+                maxLen = str.Length;
+                answer = str;
+            }
+        }
+        return answer;
+    }
+
+    static void Main()
+    {
+        var str = new List<string> { "teacher", "time", "student", "beautiful", "good" };
+        Console.WriteLine(Solution(str));
+    }
+}
+
+
+
+
+
+
+✅ 15. 가운데 문자 출력
+
+using System;
+
+class Program
+{
+    static string Solution(string s)
+    {
+        int mid = s.Length / 2;
+        return (s.Length % 2 == 1) ? s[mid].ToString() : s.Substring(mid - 1, 2);
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution("study"));
+    }
+}
+
+
+
+
+
+
+✅ 16. 중복문자제거
+
+using System;
+
+class Program
+{
+    static string Solution(string s)
+    {
+        string result = "";
+        for (int i = 0; i < s.Length; i++)
+        {
+            if (s.IndexOf(s[i]) == i)
+                result += s[i];
+        }
+        return result;
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution("ksekkset"));
+    }
+}
+
+
+
+
+
+
+✅ 17. 중복단어제거
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static List<string> Solution(List<string> words)
+    {
+        var seen = new HashSet<string>();
+        var result = new List<string>();
+
+        foreach (var word in words)
+        {
+            if (seen.Add(word))
+                result.Add(word);
+        }
+
+        return result;
+    }
+
+    static void Main()
+    {
+        var input = new List<string> { "good", "time", "good", "time", "student" };
+        var result = Solution(input);
+        Console.WriteLine(string.Join(" ", result));
+    }
+}
