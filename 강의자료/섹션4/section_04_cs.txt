@@ -1,0 +1,276 @@
+✅ 1. 자리수의 합
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(int n, List<int> arr)
+    {
+        int max = int.MinValue;
+        int answer = 0;
+
+        foreach (int num in arr)
+        {
+            int sum = 0, temp = num;
+            while (temp > 0)
+            {
+                sum += temp % 10;
+                temp /= 10;
+            }
+
+            // 자릿수의 합이 같은경우에 원래 숫자가 큰 숫자를 답으로 함.
+            if (sum > max || (sum == max && num > answer))
+            {
+                max = sum;
+                answer = num;
+            }
+        }
+
+        return answer;
+    }
+
+    static void Main()
+    {
+        var arr = new List<int> { 128, 460, 603, 40, 521, 137, 123 };
+        // var arr = new List<int> { 12, 460, 603, 40, 521, 13, 123, 235, 1234 };
+        Console.WriteLine(Solution(7, arr));
+    }
+}
+
+
+
+
+
+✅ 2. 뒤집은 소수
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static bool IsPrime(int num)
+    {
+        if (num < 2) return false;
+        for (int i = 2; i <= (int)Math.Sqrt(num); i++)
+        {
+            if (num % i == 0) return false;
+        }
+        return true;
+    }
+
+    static List<int> Solution(List<int> arr)
+    {
+        List<int> result = new List<int>();
+
+        foreach (int num in arr)
+        {
+            int x = num, res = 0;
+            while (x > 0)
+            {
+                res = res * 10 + x % 10;
+                x /= 10;
+            }
+
+            if (IsPrime(res)) result.Add(res);
+        }
+
+        return result;
+    }
+
+    static void Main()
+    {
+        var arr = new List<int> { 32, 55, 62, 20, 250, 370, 200, 30, 100 };
+        var result = Solution(arr);
+        Console.WriteLine(string.Join(" ", result));
+    }
+}
+
+
+
+
+
+✅ 3. 멘토링
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(List<List<int>> test)
+    {
+        int answer = 0;
+        int person = test[0].Count;
+        int mathCnt = test.Count;
+
+        // i, j 는 학생 번호였음.
+        for (int i = 1; i <= person; i++)
+        {
+            for (int j = 1; j <= person; j++)
+            {
+                // 같은학생이 멘토멘티를 할 수 없으니까.
+                if (i == j)
+                    continue;
+
+                // 멘토와 멘티를 미리 가정해놓고 보는것이다.
+
+                int pi = 0;
+                int pj = 0;
+                int winCnt = 0;
+
+                // k 는 시험
+                for (int k = 0; k < mathCnt; k++)
+                {
+                    // s 인덱스는 순위임.
+                    for (int s = 0; s < person; s++)
+                    {
+                        if (test[k][s] == i)
+                            pi = s; // 멘토 몇등?
+                        if (test[k][s] == j)
+                            pj = s; // 멘티 몇등?
+                    }
+
+                    // 이번시험에서는 멘토의 자격이 있는지?
+                    if (pi < pj)
+                    {
+                        winCnt++;
+                    }
+                }
+
+                // 멘토가 모든 시험을 이겼는지?
+                if (winCnt == mathCnt)
+                    answer++; // 모두 이겼기에, 멘토 멘티 성립 된다.
+            }
+        }
+
+        return answer;
+    }
+
+    static void Main()
+    {
+        var arr = new List<List<int>>
+        {
+            new List<int> { 3, 4, 1, 2 },
+            new List<int> { 4, 3, 2, 1 },
+            new List<int> { 3, 1, 4, 2 }
+        };
+        Console.WriteLine(Solution(arr));
+    }
+}
+
+
+
+
+
+
+✅ 4. K번째 큰 수
+/*
+    10C3 -> 10장 중에서 3장 뽑는 경우의 수
+    모든 경우의 수 다 구해놓고, 그중아 K번째 큰 수
+
+    - 어차피 합을 구해야 해 3중for() set.Add(card[i] + card[j] + card[l]);
+    - 중복은 자동으로 제거해야 함. HashSet<int> set = new HashSet<int>();
+    - 중복 제동 제거 
+        if (!sums.Contains(sum))
+        sums.Add(sum);
+*/
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(int n, int k, List<int> card)
+    {
+        List<int> sums = new List<int>();
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = i + 1; j < n; j++)
+            {
+                for (int l = j + 1; l < n; l++)
+                {
+                    int sum = card[i] + card[j] + card[l];
+                    if (!sums.Contains(sum))
+                        sums.Add(sum);
+                }
+            }
+        }
+
+        sums.Sort((a, b) => b.CompareTo(a));
+
+        if (k - 1 < sums.Count)
+            return sums[k - 1];
+        else
+            return -1;
+    }
+
+    static void Main()
+    {
+        var arr = new List<int> { 13, 15, 34, 23, 45, 65, 33, 11, 26, 42 };
+        Console.WriteLine(Solution(10, 3, arr));
+    }
+}
+
+
+
+
+
+
+
+✅ 5. 졸업선물
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(int m, List<(int price, int delivery)> product)
+    {
+        int answer = 0;
+        int person = product.Count;
+
+        // 사람을 많이 채워야 하니, 기본적으로 가격+배송료 합이 싼것부터 오름차운으로 해놓는다.
+        // CompareTo 타깃이 비교군보다 크면 1 작으면-1 같으면 0
+        product.Sort((a, b) =>
+        {
+            return (a.price + a.delivery).CompareTo(b.price + b.delivery);
+        });
+
+        int price = 0;
+        // 이제 하나씩 할인을 해봄.
+        for (int i = 0; i < person; i++)
+        {
+            price = product[i].price / 2 + product[i].delivery;
+            int curCnt = 1;
+
+            for (int j = 0; j < person; j++)
+            {
+                if (i == j) continue;
+
+                price += product[j].price + product[j].delivery;
+
+                if (price <= m)
+                    curCnt++;
+                else
+                    break;
+            }
+
+            answer = Math.Max(answer, curCnt);
+        }
+
+        return answer;
+    }
+
+    static void Main()
+    {
+        var arr = new List<(int, int)>
+        {
+            (6, 6),
+            (2, 2),
+            (4, 3),
+            (4, 5),
+            (10, 3)
+        };
+        Console.WriteLine(Solution(28, arr));
+    }
+}
