@@ -1,0 +1,179 @@
+✅ 1. 회문 문자열 (대소문자 구분 없이 회문인지 판별)
+
+using System;
+
+class Program
+{
+    static string Solution(string s)
+    {
+        s = s.ToLower();
+        for (int i = 0; i < s.Length / 2; i++)
+        {
+            if (s[i] != s[s.Length - 1 - i])
+                return "NO";
+        }
+        return "YES";
+    }
+
+    static void Main()
+    {
+        string str = "goooG";
+        Console.WriteLine(Solution(str));
+    }
+}
+
+
+
+
+
+✅ 2. 유효한 팰린드롬 (알파벳만 고려한 회문 판별)
+
+using System;
+
+class Program
+{
+    static string Solution(string s)
+    {
+        string cleaned = "";
+        foreach (char c in s)
+        {
+            if (char.IsLetter(c))
+                cleaned += char.ToLower(c);
+        }
+
+        for (int i = 0; i < cleaned.Length / 2; i++)
+        {
+            if (cleaned[i] != cleaned[cleaned.Length - 1 - i])
+                return "NO";
+        }
+
+        return "YES";
+    }
+
+    static void Main()
+    {
+        string str = "found7, time: study; Yduts; emit, 7Dnuof";
+        Console.WriteLine(Solution(str));
+    }
+}
+
+
+
+
+
+✅ 3. 숫자만 추출
+
+using System;
+
+class Program
+{
+    static int Solution(string s)
+    {
+        string digits = "";
+        foreach (char c in s)
+        {
+            if (char.IsDigit(c))
+                digits += c;
+        }
+        return int.Parse(digits);
+    }
+
+    static void Main()
+    {
+        string str = "g0en2T0s8eSoft";
+        Console.WriteLine(Solution(str));
+    }
+}
+
+
+
+
+
+✅ 4. 가장 짧은 문자거리
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static List<int> Solution(string s, char t)
+    {
+        int len = s.Length;
+        List<int> result = new List<int>(new int[len]);
+        int p = 1000;
+
+        for (int i = 0; i < len; i++)
+        {
+            if (s[i] == t)
+                p = 0;
+            else
+                p++;
+            result[i] = p;
+        }
+
+        p = 1000;
+        for (int i = len - 1; i >= 0; i--)
+        {
+            if (s[i] == t)
+                p = 0;
+            else
+                p++;
+            result[i] = Math.Min(result[i], p);
+        }
+
+        return result;
+    }
+
+    static void Main()
+    {
+        string str = "teachermode";
+        char target = 'e';
+        var result = Solution(str, target);
+        Console.WriteLine(string.Join(" ", result));
+    }
+}
+
+
+
+
+
+✅ 5. 문자열 압축
+/*
+    인덱스 범위 하나 덜잡고
+    for (int i = 0; i < s.Length - 1; i++)
+    {
+        if (s[i] == s[i + 1])
+    ...
+*/
+using System;
+
+class Program
+{
+    static string Solution(string s)
+    {
+        string result = "";
+        int count = 1;
+        s += " ";
+
+        for (int i = 0; i < s.Length - 1; i++)
+        {
+            if (s[i] == s[i + 1])
+                count++;
+            else
+            {
+                result += s[i];
+                if (count > 1)
+                    result += count.ToString();
+                count = 1;
+            }
+        }
+
+        return result;
+    }
+
+    static void Main()
+    {
+        string str = "KKHSSSSSSSEE";
+        Console.WriteLine(Solution(str));
+    }
+}
