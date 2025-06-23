@@ -1,0 +1,287 @@
+✅ 1. 올바른 괄호 (Valid Parentheses)
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static string Solution(string s)
+    {
+        Stack<char> stack = new Stack<char>();
+        foreach (char ch in s)
+        {
+            if (ch == '(')
+                stack.Push(ch);
+            else
+            {
+                if (stack.Count == 0) return "NO";
+                stack.Pop();
+            }
+        }
+        return stack.Count == 0 ? "YES" : "NO";
+    }
+
+    static void Main()
+    {
+        string str = "(()(()))())";
+        Console.WriteLine(Solution(str)); // 출력: NO
+    }
+}
+
+
+
+
+
+✅ 2. 괄호 문자 제거 (Remove Characters Inside Parentheses)
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static string Solution(string s)
+    {
+        Stack<char> stack = new Stack<char>();
+        string result = "";
+
+        foreach (char c in s)
+        {
+            if (c == '(')
+            {
+                stack.Push(c);
+            }
+            else if (c == ')')
+            {
+                stack.Pop();
+            }
+            else
+            {
+                if(stack.Count == 0)
+                {
+                    result += c;
+                }
+            }
+        }
+
+
+        return result;
+    }
+
+    static void Main()
+    {
+        string str = "(A(BC)D)EF(G(H)(IJ)K)LM(N)";
+        Console.WriteLine(Solution(str)); // 출력: EFLM
+    }
+
+
+
+
+
+✅ 3. 크레인 인형뽑기 (Crane Doll Game)
+/*
+    스택에 넣고나서 처리하는게 아니라
+    스택에 넣으려고 하는 시점에 조건보고 -> 오히려 pop을해서 처리
+*/
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(int[,] board, List<int> moves)
+    {
+        Stack<int> basket = new Stack<int>();
+        int n = board.GetLength(0);
+        int removed = 0;
+
+        foreach (int move in moves)
+        {
+            for (int i = 0; i < n; i++)
+
+            {
+                int val = board[i, move - 1];
+                if (val != 0)
+                {
+                    board[i, move - 1] = 0;
+                    if (basket.Count > 0 && basket.Peek() == val)
+                    {
+                        basket.Pop();
+                        removed += 2;
+                    }
+                    else
+                    {
+                        basket.Push(val);
+                    }
+                    break;
+                }
+            }
+        }
+
+        return removed;
+    }
+
+    static void Main()
+    {
+        int[,] board = {
+            {0,0,0,0,0},
+            {0,0,1,0,3},
+            {0,2,5,0,1},
+            {4,2,4,4,2},
+            {3,5,1,3,1}
+        };
+
+        List<int> moves = new List<int> { 1,5,3,5,1,2,1,4 };
+        Console.WriteLine(Solution(board, moves)); // 출력: 4
+    }
+}
+
+
+
+
+
+✅ 4. 후위식 연산 (Postfix Expression Evaluation)
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(string s)
+    {
+        Stack<int> stack = new Stack<int>();
+        foreach (char ch in s)
+        {
+            if (char.IsDigit(ch))
+                stack.Push(ch - '0');
+            else
+            {
+                int b = stack.Pop();
+                int a = stack.Pop();
+                if (ch == '+') stack.Push(a + b);
+                else if (ch == '-') stack.Push(a - b);
+                else if (ch == '*') stack.Push(a * b);
+                else if (ch == '/') stack.Push(a / b);
+            }
+        }
+        return stack.Peek();
+    }
+
+    static void Main()
+    {
+        string expr = "352+*9-";
+        Console.WriteLine(Solution(expr)); // 출력: 12
+    }
+}
+
+
+
+
+
+✅ 5. 쇠막대기 (Iron Rods)
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(string s)
+    {
+        Stack<char> stack = new Stack<char>();
+        int answer = 0;
+
+        for (int i = 0; i < s.Length; i++)
+        {
+            if (s[i] == '(')
+            {
+                stack.Push('(');
+            }
+            else
+            {
+                stack.Pop();
+                if (s[i - 1] == '(')
+                    answer += stack.Count;
+                else
+                    answer += 1;
+            }
+        }
+
+        return answer;
+    }
+
+    static void Main()
+    {
+        string str = "()(((()())(())()))(())";
+        Console.WriteLine(Solution(str)); // 출력: 17
+    }
+}
+
+
+
+
+
+✅ 6. 공주 구하기 (Save the Princess)
+/*
+    처음에 큐에 들어가있는데
+    순서대로 나왔다가 다시 큐로 들어가
+    그런데 특정조건에의해서 나왔는데 못들어갈 수 도 있어
+*/
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(int n, int k)
+    {
+        Queue<int> q = new Queue<int>();
+        for (int i = 1; i <= n; i++)
+            q.Enqueue(i);
+
+        while (q.Count > 1)
+        {
+            for (int i = 1; i < k; i++)
+            {
+                q.Enqueue(q.Dequeue());
+            }
+            q.Dequeue(); // 제거
+        }
+
+        return q.Peek();
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution(8, 3)); // 출력: 7
+    }
+}
+
+
+
+
+
+✅ 7. 교육 과정 설계 (Curriculum Design)
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static string Solution(string need, string plan)
+    {
+        Queue<char> q = new Queue<char>(need);
+
+        foreach (char ch in plan)
+        {
+            if (q.Count == 0) break;
+            if (ch == q.Peek()) q.Dequeue();
+            else if (need.Contains(ch)) return "NO";
+        }
+
+        return q.Count == 0 ? "YES" : "NO";
+    }
+
+    static void Main()
+    {
+        string need = "CBA";
+        string plan = "CBDAGE";
+        Console.WriteLine(Solution(need, plan)); // 출력: YES
+    }
+}
