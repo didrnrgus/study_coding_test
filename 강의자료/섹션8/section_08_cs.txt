@@ -123,12 +123,56 @@ class Program
     }
 }
 
+//////////////////////////////////////////////////////////////////////////////
+using System;
+using System.Collections.Generic;
 
+class Program
+{
+   static void DFS(int level, int limit, string str, ref List<string> result)
+   {
+       if (level > limit)
+       {
+           if (str.Length > 0)
+               result.Add(str);
+
+           return;
+       }
+
+       // 이번숫자가 안들어감
+       DFS(level + 1, limit, str, ref result);
+
+       // 이번숫자가 들어감.
+       str += $"{level} ";
+       DFS(level + 1, limit, str, ref result);
+
+   }
+
+   static List<string> Solution(int n)
+   {
+       List<string> result = new List<string>();
+
+       DFS(1, n, "", ref result);
+
+       result.Reverse();
+       return result;
+   }
+
+   static void Main()
+   {
+       foreach (var s in Solution(3))
+           Console.WriteLine(s);
+   }
+}
 
 
 
 ✅ 5. 합이 같은 부분집합
-
+/*
+    - 각 인덱스가 들어가는지 안들어가는지 부분집합
+    - 마지막에서 합 -> 어디다가 저장 -> List 같은곳에
+        - add 전에 물어봐 있는지 indexof
+*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -172,12 +216,120 @@ class Program
     }
 }
 
+/*
+    비효율 버전 -> DFS들어갈때부터 합을 구해주면 되지않나.
+*/
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static bool flag = false;
+    static List<int> sumList = new List<int>();
+
+    static void DFS(int levelIndex, int limit, List<int> selectedList, List<int> arr)
+    {
+        if (flag)
+            return;
+
+        if (levelIndex > limit)
+        {
+            int sum = selectedList.Sum();
+
+            if (sumList.IndexOf(sum) != -1)
+            {
+                flag = true;
+            }
+            else
+            {
+                sumList.Add(sum);
+            }
+
+            return;
+        }
+
+        DFS(levelIndex + 1, limit, new List<int>(selectedList), arr);
+
+        selectedList.Add(arr[levelIndex]);
+        DFS(levelIndex + 1, limit, new List<int>(selectedList), arr);
+    }
 
 
+    static string Solution(List<int> arr)
+    {
+        DFS(0, arr.Count-1, new List<int>(), arr);
+
+        return flag ? "YES" : "NO";
+    }
+
+    static void Main()
+    {
+        var arr = new List<int> { 1, 3, 5, 6, 7, 10 };
+        Console.WriteLine(Solution(arr)); // YES
+    }
+}
+
+/*
+    수정본 DFS 들어갈떄 합으로 넣음
+*/
+/*
+    - 각 인덱스가 들어가는지 안들어가는지 부분집합
+    - 마지막에서 합 -> 어디다가 저장 -> List 같은곳에
+        - add 전에 물어봐 있는지 indexof
+*/
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static bool flag = false;
+    static List<int> sumList = new List<int>();
+
+    static void DFS(int levelIndex, int limit, int sum, List<int> arr)
+    {
+        if (flag)
+            return;
+
+        if (levelIndex > limit)
+        {
+            if (sumList.IndexOf(sum) != -1)
+            {
+                flag = true;
+            }
+            else
+            {
+                sumList.Add(sum);
+            }
+
+            return;
+        }
+
+        DFS(levelIndex + 1, limit, sum, arr);
+        DFS(levelIndex + 1, limit, sum + arr[levelIndex], arr);
+    }
+
+
+    static string Solution(List<int> arr)
+    {
+        DFS(0, arr.Count-1, 0, arr);
+
+        return flag ? "YES" : "NO";
+    }
+
+    static void Main()
+    {
+        var arr = new List<int> { 1, 3, 5, 6, 7, 10 };
+        Console.WriteLine(Solution(arr)); // YES
+    }
+}
 
 
 ✅ 6. 바둑이 승차
-
+/*
+    최대로 태울수 있는 맥스값을 구해야 함.
+    - 브레이크 : 바둑이 수, 무게
+*/
 using System;
 using System.Collections.Generic;
 
@@ -214,11 +366,56 @@ class Program
 }
 
 
+/*
+    최대로 태울수 있는 맥스값을 구해야 함.
+    - 브레이크 : 바둑이 수, 무게
+*/
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int max = 0;
+
+    static void DFS(int levelCount, int limit, int sum, List<int> arr)
+    {
+        if (sum > limit)
+            return;
+
+        if (levelCount == arr.Count)
+        {
+            max = Math.Max(max, sum);
+            return;
+        }
+
+        DFS(levelCount + 1, limit, sum, arr);
+        DFS(levelCount + 1, limit, sum + arr[levelCount], arr);
+    }
+
+    static int Solution(int c, List<int> arr)
+    {
+        DFS(0, c, 0, arr);
+        return max;
+    }
+
+    static void Main()
+    {
+        var arr = new List<int> { 81, 58, 42, 33, 61 };
+        Console.WriteLine(Solution(259, arr)); // 242
+    }
+}
+
 
 
 
 ✅ 7. 최대점수 구하기 (DFS + 제한 시간)
 
+/*
+    문제수 제한시간
+    (점수, 푸는데걸릴시간)
+    
+    최대점수는?
+*/
 using System;
 using System.Collections.Generic;
 
@@ -254,6 +451,56 @@ class Program
 }
 
 
+/*
+    문제수 제한시간
+    (점수, 푸는데걸릴시간)
+    
+    최대점수는?
+*/
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int maxScore = int.MinValue;
+
+    static void DFS(int levelIndex, int limitTime, int sumTime, int sumScore, List<int> pScore, List<int> pTime)
+    {
+        if (sumTime > limitTime)
+            return;
+
+        if(levelIndex == pScore.Count)
+        {
+            maxScore = Math.Max(maxScore, sumScore);
+            return;
+        }
+
+        DFS(levelIndex + 1, limitTime
+            , sumTime, sumScore
+            , pScore, pTime);
+
+        DFS(levelIndex + 1, limitTime
+            , sumTime + pTime[levelIndex], sumScore + pScore[levelIndex]
+            , pScore, pTime);
+    }
+
+
+    static int Solution(int m, List<int> pScore, List<int> pTime)
+    {
+        DFS(0, m, 0, 0, pScore, pTime);
+
+        int result = maxScore;
+        return result;
+    }
+
+    static void Main()
+    {
+        var pScore = new List<int> { 10, 25, 15, 6, 7 };
+        var pTime = new List<int> { 5, 12, 8, 3, 4 };
+        Console.WriteLine(Solution(20, pScore, pTime)); // 41
+    }
+}
+
 
 
 
@@ -262,28 +509,57 @@ class Program
 using System;
 using System.Collections.Generic;
 
+/*
+ ▣ 입력예제  1                                                                     
+3  2
+▣ 출력예제  1
+1  1
+1  2
+1  3
+2  1
+2  2
+2  3
+3  1
+3  2
+3  3
+9
+
+- 레퍼런스 타입이 아닌
+    - 하나씩 증가해가야할때
+    - 미리 만들어놓은 배열을 보내는게 낫다
+
+curSelected 이거 딴데서 쓰더라도 덮어씌워지므로 돌려 씀.
+ */
+
 class Program
 {
-    static void DFS(int L, int n, int m, int[] tmp, List<List<int>> answer)
+    static void DFS(int level, int limit, int n, int[] curSelected, List<List<int>> resultList)
     {
-        if (L == m)
-            answer.Add(new List<int>(tmp));
-        else
+        if (level == limit)
         {
-            for (int i = 1; i <= n; i++)
-            {
-                tmp[L] = i;
-                DFS(L + 1, n, m, tmp, answer);
-            }
+            // 어쩄든 선택은 했으니까 갯수 나옴.
+            // level로 했었어도 될듯
+            resultList.Add(new List<int>(curSelected));
+            return;
+        }
+
+        // DFS 한번에 추가 안하는경우는 없어, 중복하더라도 해야 해
+        for (int i = 0; i < n; i++)
+        {
+            //DFS(level + 1, limit, n, new List<int>(curSelected), resultList);
+
+            curSelected[level] = (i + 1);
+            DFS(level + 1, limit, n, curSelected, resultList);
         }
     }
 
     static List<List<int>> Solution(int n, int m)
     {
-        var answer = new List<List<int>>();
-        var tmp = new int[m];
-        DFS(0, n, m, tmp, answer);
-        return answer;
+        List<List<int>> resultList = new List<List<int>>();
+        int[] curSelected = new int[m];
+        DFS(0, m, n, curSelected, resultList);
+
+        return resultList;
     }
 
     static void Main()
@@ -293,9 +569,9 @@ class Program
         {
             Console.WriteLine(string.Join(" ", vec));
         }
+        Console.WriteLine(result.Count);
     }
 }
-
 
 
 
@@ -304,6 +580,11 @@ class Program
 
 using System;
 using System.Collections.Generic;
+/*
+    동전 세개 중 어떤동전 선택 하고 안하고 따라서
+    일단 합이 맞는 얘들중에, (오버x)
+    동전 가장 작게 들어간 케이스.
+*/
 
 class Program
 {
@@ -337,11 +618,76 @@ class Program
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+using System;
+using System.Collections.Generic;
+/*
+    동전 세개 중 어떤동전 선택 하고 안하고 따라서
+    일단 합이 맞는 얘들중에, (오버x)
+    동전 가장 작게 들어간 케이스.
+*/
+
+class Program
+{
+    static int answer = int.MaxValue;
+
+    static void DFS(int level, int limit, int sumValue, List<int> coins)
+    {
+        // 동전 sumValue.count 중 하나는 반드시 해야하기에 level로 따져보자
+        // 그러니까 적은 level 인게 최소동전 사용갯수야.
+
+        if(sumValue > limit)
+        {
+            return;
+        }
+        else if(sumValue == limit)
+        {
+            answer = Math.Min(answer, level);
+            return;
+        }
+
+        for(int i = 0; i<coins.Count; i++)
+        {
+            // 무지성으로 넣어보내도 다음단계에 죽을얘들은 죽음.
+            DFS(level + 1, limit, sumValue + coins[i], coins);
+        }
+    }
+
+    static int Solution(int m, List<int> coins)
+    {
+        DFS(0, m, 0, coins);
+        int result = answer;
+
+        return result;
+    }
+
+    static void Main()
+    {
+        var coins = new List<int> { 1, 2, 5 };
+        Console.WriteLine(Solution(15, coins)); // 3
+    }
+}
 
 
 
 
 ✅ 10. 순열 구하기 (중복 없이)
+
+/*
+    ▣ 입력예제  1                                                                     
+    3  2
+    3  6  9
+    ▣ 출력예제  1
+    3  6
+    3  9
+    6  3
+    6  9
+    9  3
+    9  6
+    6
+
+    아까 8번에서는 중복 허용이었는데 여기선 안된다네
+*/
 
 using System;
 using System.Collections.Generic;
@@ -374,6 +720,87 @@ class Program
         int[] tmp = new int[m];
         DFS(0, m, arr, ch, tmp, answer);
         return answer;
+    }
+
+    static void Main()
+    {
+        var arr = new List<int> { 3, 6, 9 };
+        var result = Solution(2, arr);
+        foreach (var vec in result)
+        {
+            Console.WriteLine(string.Join(" ", vec));
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+/*
+    ▣ 입력예제  1                                                                     
+    3  2
+    3  6  9
+
+    ▣ 출력예제  1
+    3  6
+    3  9
+    6  3
+    6  9
+    9  3
+    9  6
+    6
+
+    아까 8번에서는 중복 허용이었는데 여기선 안된다네
+*/
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+
+    static void DFS(int level, int limitSelectedCount, int[] selectedArr, int[] check, List<int> arr, List<List<int>> selectedGroupArr)
+    {
+        if (level == limitSelectedCount)
+        {
+            selectedGroupArr.Add(new List<int>(selectedArr));
+
+            // 여기다가 하면 다른얘들하다 버그남.
+            // 몽땅바꾸면 이전에 하고있던얘들은 어떡하라고.
+            //for (int i = 0; i < check.Length; i++)
+            //{
+            //    check[i] = 0;
+            //}
+
+            return;
+        }
+
+        for (int i = 0; i < arr.Count; i++)
+        {
+            if (check[i] == 0)
+            {
+                check[i] = 1;
+                selectedArr[level] = arr[i];
+                DFS(level + 1, limitSelectedCount, selectedArr, check, arr, selectedGroupArr);
+
+                // 썼으면 딱 쓴것만 되돌려 놓아야 함.
+                check[i] = 0;
+            }
+        }
+    }
+
+    static List<List<int>> Solution(int m, List<int> arr)
+    {
+        List<List<int>> selectedGroupArr = new List<List<int>>();
+        int[] selectedArr = new int[m];
+        int[] check = new int[arr.Count];
+
+        for (int i = 0; i < check.Length; i++)
+        {
+            check[i] = 0;
+        }
+
+        DFS(0, m, selectedArr, check, arr, selectedGroupArr);
+
+        return selectedGroupArr;
     }
 
     static void Main()
@@ -423,14 +850,26 @@ class Program
 
     static int DFS(int n, int r)
     {
-        if (dy[n, r] > 0) return dy[n, r];
-        if (n == r || r == 0) return 1;
-        return dy[n, r] = DFS(n - 1, r - 1) + DFS(n - 1, r);
+        // 저장해 놓은게 있음.
+        if (dy[n, r] > 0) 
+            return dy[n, r];
+
+        // 조합의 성질 nC0 = nCn = 1
+        // 아무것도 안뽑거나 / 전부 뽑는경우는 1가지.
+        if (n == r || r == 0) 
+            return 1;
+
+        // 메모이제이션 저장.
+        // nCr = (n-1)C(r-1) + (n-1)Cr
+        dy[n, r] = DFS(n - 1, r - 1) + DFS(n - 1, r);
+
+        return dy[n, r];
     }
 
     static void Main()
     {
-        Console.WriteLine(DFS(5, 3)); // 10
+        // n! / ((n-r)! * r!)
+        Console.WriteLine(DFS(5, 3)); // 5C3 -> 10 
     }
 }
 
@@ -453,20 +892,31 @@ class Program
 
     static int Comb(int n, int r)
     {
-        if (comb[n, r] > 0) return comb[n, r];
-        if (n == r || r == 0) return 1;
-        return comb[n, r] = Comb(n - 1, r - 1) + Comb(n - 1, r);
+        if (comb[n, r] > 0)
+            return comb[n, r];
+
+        if (n == r || r == 0)
+            return 1;
+
+        comb[n, r] = Comb(n - 1, r - 1) + Comb(n - 1, r);
+
+        return comb[n, r];
+
     }
 
     static void DFS(int L, int sum, int n, int f, List<int> answer)
     {
-        if (found) return;
+        if (found)
+            return;
+
         if (L == n)
         {
             if (sum == f)
             {
                 found = true;
-                for (int i = 0; i < n; i++) answer.Add(p[i]);
+
+                for (int i = 0; i < n; i++) 
+                    answer.Add(p[i]);
             }
         }
         else
@@ -487,9 +937,14 @@ class Program
     static List<int> FindPermutation(int n, int f)
     {
         List<int> answer = new List<int>();
-        for (int i = 0; i < n; i++) b[i] = Comb(n - 1, i);
+
+        for (int i = 0; i < n; i++)
+            b[i] = Comb(n - 1, i);
+
         DFS(0, 0, n, f, answer);
+
         return answer;
+
     }
 
     static void Main()
@@ -499,6 +954,158 @@ class Program
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+using System;
+using System.Collections.Generic;
+
+/*
+    3  1  2  4
+      4  3  6
+       7  9
+        16 
+
+    4, 16 이렇게 주어진 상태
+
+    파스칼 삼각형으로 16(결과)를 아는 상태에서 역으로 원소값을 찾는것이다.
+    4는 1부터 4까지의 순열, 어떤순서이든지 끝에 16이 나오게 하면됨
+
+
+    이항계수 구하기
+
+    거꾸로, 만약 1 2 3 4 라고 해보자
+    이것은 4에 대한 이항계수를 구하는게아니라
+    4가지 이니까 3의 대한 이항계수를 구하는것이다.
+
+    0 1 2 3
+    조합에서는 3C0 3C1 3C2 3C3
+    1, 3, 3, 1
+
+    이걸 1 2 3 4 라고 보면
+    1+2 2+3 3+4 -> 3 5 7 
+    1+2+2+3 2+3+3+4 -> 8 12
+    1+2+2+2+3+3+3+4 ->  20
+
+    잠깐 봤을때 4, 20 이라면
+    1 2 3 4 가 정답이겠지
+
+    이걸 토대로 1 2 3 4 의 사용 횟수
+    1 -> 1
+    2 -> 3
+    3 -> 3
+    4 -> 1
+
+    1 3 3 1
+    이항계수이다
+
+    이항계수를 각 인덱스에 섞어가면서 곱해보기
+    그러니까 각 인덱스마다 1~4 까지 수를(안뽑는경우 없고, 중복없고) 뽑기
+
+    조합 말로설명.
+    3C0 - 3개 중 안뽑는거 1
+    3C1 - 3개 중 하나만 뽑는거 3개를 하나씩 뽑으니까 3가지
+    3C2 - 사실 3-2 = 1 이니 3C1 과 같음. 3가지
+    3C3 - 3개 중 다 뽑는거 1
+ 
+ */
+
+class Program
+{
+    static int[,] comb = new int[11, 11]; // combination memoization
+    static int[] b = new int[11]; // binomial coefficient
+    static bool found = false;
+    static bool[] used = new bool[11];
+
+    static int Combination(int n, int r)
+    {
+        if (r == 1 || 1 == n - r)
+            return n;
+
+        if (n == r || r == 0)
+            return 1;
+
+        // 뭔가 한적이 있다?
+        if (comb[n, r] > 0)
+            return comb[n, r];
+
+        comb[n, r] = Combination(n - 1, r - 1) + Combination(n - 1, r);
+        return comb[n, r];
+    }
+
+    static void DFS(int level, int maxNum, int finalNum, int[] selectedNum, List<int> answer)
+    {
+        if (found)
+            return;
+
+        if (level == maxNum)
+        {
+            //Console.WriteLine(string.Join(" ", selectedNum));
+
+            int sum = 0;
+            for (int i = 0; i < maxNum; i++)
+            {
+                sum += selectedNum[i] * b[i];
+            }
+
+            if (sum == finalNum)
+            {
+                found = true;
+                for (int i = 0; i < maxNum; i++)
+                {
+                    answer.Add(selectedNum[i]);
+                }
+            }
+            return;
+        }
+
+        for (int i = 0; i < maxNum; i++)
+        {
+            if (!used[i])
+            {
+                used[i] = true;
+                selectedNum[level] = (i + 1);
+
+                DFS(level + 1, maxNum, finalNum, selectedNum, answer);
+
+                used[i] = false;
+                selectedNum[level] = 0;
+            }
+        }
+
+    }
+
+
+    static List<int> FindPermutation(int n, int finalNum)
+    {
+        List<int> answer = new List<int>();
+
+        // 1~n 까지의 수 이지만
+        // 이항계수를 구하기 위해서 갯수가 n 개 인
+        // (n-1)에 대한 이항계수를 구해야 한다.
+        // 만약 n 이 4라면 -> 3C0 3C1 3C2 3C3 이렇게 이항계수를 구해야 함.
+        // Comb() 함수는 조합을 구하면서 메모이제이션 저장도 하고 해야 함.
+        for (int i = 0; i < n; i++)
+            b[i] = Combination(n - 1, i);
+
+        int[] selectedNum = new int[n];
+        for (int i = 0; i < n; i++)
+        {
+            selectedNum[i] = 0;
+        }
+
+        // level 0 이라면, 첫번쨰 칸에 1~4 중 넣어서 시작해봄.
+        DFS(0, n, finalNum, selectedNum, answer);
+
+        return answer;
+
+    }
+
+    static void Main()
+    {
+        var result = FindPermutation(4, 16);
+        Console.WriteLine(string.Join(" ", result)); // 3 1 2 4
+    }
+}
 
 
 
@@ -542,7 +1149,72 @@ class Program
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 
+using System;
+using System.Collections.Generic;
+
+/*
+    ▣ 입력예제  1                                                                     
+    4  2
+    ▣ 출력예제  1
+    1  2
+    1  3
+    1  4
+    2  3
+    2  4
+    3  4
+    6
+
+    지금까진 조합에 대한 결과값을 구했는데
+    조합 케이스를 구해보자.
+*/
+
+class Program
+{
+
+    static void DFS(int level, int limitSlot, int startNum, int n, int[] selectedArr, List<List<int>> resultArr)
+    {
+        if (level == limitSlot)
+        {
+            resultArr.Add(new List<int>(selectedArr));
+            return;
+        }
+
+        // 순회를 0부터 시작하지않는다
+        // 첫자리를 이어서 해야 할 필요가 있기때문
+        // 순회 0으로 하면, 중복을 허용한 뽑기가 되어버림.
+
+        /*
+            startNum:
+            다음 반복에서 어디부터 숫자를 사용할지 지정하는 최소값.
+            이미 뽑은 숫자보다 더 큰 숫자부터 뽑아야 중복 없이 조합이 만들어지기 때문에 필요함.
+         */
+        for (int i = startNum; i <= n; i++)
+        {
+            selectedArr[level] = i;
+            DFS(level + 1, limitSlot, i + 1, n, selectedArr, resultArr);
+        }
+    }
+
+    static List<List<int>> Solution(int n, int m)
+    {
+        List<List<int>> resultArr = new List<List<int>>();
+        int[] selectedArr = new int[m];
+        DFS(0, m, 1, n, selectedArr, resultArr);
+
+        return resultArr;
+    }
+
+    static void Main()
+    {
+        var result = Solution(4, 2);
+        foreach (var vec in result)
+        {
+            Console.WriteLine(string.Join(" ", vec));
+        }
+    }
+}
 
 
 
@@ -550,29 +1222,56 @@ class Program
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 class Program
 {
-    static int answer = 0;
+    /*
+        ▣ 입력예제  1                                                                     
+        5  3
+        2  4  5  8  12
+        6
+        
+        ▣ 출력예제  1
+        2
+    */
 
-    static void DFS(int L, int s, int sum, int k, int m, List<int> arr)
+    static int answer = 0;
+    static int toSelectCount = 0;
+    static int multiple = 0;
+
+    static void DFS(int level, int start, int[] selectedArr, List<int> arr)
     {
-        if (L == k)
+        if (level == toSelectCount)
         {
-            if (sum % m == 0) answer++;
+            int sum = selectedArr.Sum();
+
+            if (sum % multiple == 0)
+                answer++;
+
+            Console.WriteLine($"{string.Join(" ", selectedArr)} -> {sum}");
+            return;
         }
-        else
+
+        for (int i = start; i < arr.Count; i++)
         {
-            for (int i = s; i < arr.Count; i++)
-                DFS(L + 1, i + 1, sum + arr[i], k, m, arr);
+            selectedArr[level] = arr[i];
+            DFS(level + 1, i + 1, selectedArr, arr);
         }
     }
 
     static int Solution(int n, int k, List<int> arr, int m)
     {
-        answer = 0;
-        DFS(0, 0, 0, k, m, arr);
-        return answer;
+        toSelectCount = k;
+        multiple = m;
+        numCount = n;
+
+        int[] selectedArr = new int[toSelectCount];
+
+        DFS(0, 0, selectedArr, arr);
+
+        int result = answer;
+        return result;
     }
 
     static void Main()
