@@ -4,6 +4,13 @@ using System;
 
 class Program
 {
+    /*
+        1 까지는 1가지
+        2 까지는 2가지
+        3은? 1에서 3까지 2가지
+             2에서 3까지 1가지
+    
+    */
     static int Solution(int n)
     {
         int[] dy = new int[n + 1];
@@ -63,6 +70,12 @@ using System.Collections.Generic;
 
 class Program
 {
+    /*
+        arr 5, 3, 7, 8, 6, 2, 9, 4 
+        dt  1  1  2  3  2  1  4  2
+
+        4
+    */
     static int Solution(List<int> arr)
     {
         int n = arr.Count;
