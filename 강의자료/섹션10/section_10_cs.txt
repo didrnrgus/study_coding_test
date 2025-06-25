@@ -1,0 +1,168 @@
+✅ 1. 계단 오르기
+
+using System;
+
+class Program
+{
+    static int Solution(int n)
+    {
+        int[] dy = new int[n + 1];
+        dy[1] = 1;
+        dy[2] = 2;
+
+        for (int i = 3; i <= n; i++)
+        {
+            dy[i] = dy[i - 1] + dy[i - 2];
+        }
+
+        return dy[n];
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution(7));
+    }
+}
+
+
+
+
+✅ 2. 돌다리 건너기
+
+using System;
+
+class Program
+{
+    static int Solution(int n)
+    {
+        int[] dy = new int[n + 2];
+        dy[1] = 1;
+        dy[2] = 2;
+
+        for (int i = 3; i <= n + 1; i++)
+        {
+            dy[i] = dy[i - 1] + dy[i - 2];
+        }
+
+        return dy[n + 1];
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Solution(7));
+    }
+}
+
+
+
+
+✅ 3. 최대 부분 증가 수열 (LIS)
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(List<int> arr)
+    {
+        int n = arr.Count;
+        int[] dy = new int[n];
+        Array.Fill(dy, 1);
+        int answer = 1;
+
+        for (int i = 1; i < n; i++)
+        {
+            int maxVal = 0;
+            for (int j = 0; j < i; j++)
+            {
+                if (arr[j] < arr[i] && dy[j] > maxVal)
+                {
+                    maxVal = dy[j];
+                }
+            }
+            dy[i] = maxVal + 1;
+            answer = Math.Max(answer, dy[i]);
+        }
+
+        return answer;
+    }
+
+    static void Main()
+    {
+        List<int> arr = new List<int> { 5, 3, 7, 8, 6, 2, 9, 4 };
+        Console.WriteLine(Solution(arr));
+    }
+}
+
+
+
+
+✅ 4. 동전 교환 (냅색)
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(int m, List<int> coin)
+    {
+        int[] dy = new int[m + 1];
+        Array.Fill(dy, 1000); // 큰 값으로 초기화
+        dy[0] = 0;
+
+        foreach (int c in coin)
+        {
+            for (int j = c; j <= m; j++)
+            {
+                dy[j] = Math.Min(dy[j], dy[j - c] + 1);
+            }
+        }
+
+        return dy[m];
+    }
+
+    static void Main()
+    {
+        List<int> coin = new List<int> { 1, 2, 5 };
+        Console.WriteLine(Solution(15, coin));
+    }
+}
+
+
+
+
+✅ 5. 최대 점수 구하기 (냅색)
+
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static int Solution(int m, List<(int score, int time)> arr)
+    {
+        int[] dy = new int[m + 1];
+
+        foreach (var (score, time) in arr)
+        {
+            for (int j = m; j >= time; j--)
+            {
+                dy[j] = Math.Max(dy[j], dy[j - time] + score);
+            }
+        }
+
+        return dy[m];
+    }
+
+    static void Main()
+    {
+        var arr = new List<(int, int)>
+        {
+            (10, 5),
+            (25, 12),
+            (15, 8),
+            (6, 3),
+            (7, 4)
+        };
+        Console.WriteLine(Solution(20, arr));
+    }
+}
