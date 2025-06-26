@@ -117,6 +117,10 @@ using System.Collections.Generic;
 
 class Program
 {
+    /*
+        동전은 중복사용이 되었기에 
+        앞에서부터 순회를 했었다.
+    */
     static int Solution(int m, List<int> coin)
     {
         int[] dy = new int[m + 1];
@@ -151,19 +155,35 @@ using System.Collections.Generic;
 
 class Program
 {
+    /*
+        동전은 중복사용이 되었기에 
+        앞에서부터 순회를 했었다.
+
+        하지만 이것은 문제가 하나씩밖에 없기때문에 
+        중복을 해선 안된다.
+
+        dt 에서 해당시간 인덱스에서
+        일정 인덱스 뒤에것을 가져다 더하면서 뒤로가는데
+        이게 더했던것을 또 참조하면서 중복 적용이 되어버린다는것.
+        앞에서부터 순차적으로 풀다보면 중복으로 더해지는 구간이 나옴.
+    */
     static int Solution(int m, List<(int score, int time)> arr)
     {
-        int[] dy = new int[m + 1];
+        int[] dt = new int[m + 1];
+        
+        foreach(int e in dt)
+            dt[e] = 0;
 
-        foreach (var (score, time) in arr)
+        for (int i = 0; i < arr.Count; i++)
         {
-            for (int j = m; j >= time; j--)
+            for (int j = m; j >= arr[i].time; j--)
             {
-                dy[j] = Math.Max(dy[j], dy[j - time] + score);
+                int tempScore = dt[j - arr[i].time] + arr[i].score;
+                dt[j] = Math.Max(dt[j], tempScore);
             }
         }
 
-        return dy[m];
+        return dt[m];
     }
 
     static void Main()
